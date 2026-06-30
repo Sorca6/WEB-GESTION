@@ -8,11 +8,13 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
+// Configuración segura del Pool de PostgreSQL
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
 });
 
+// Inicialización de la infraestructura relacional
 const initDB = async () => {
     try {
         await pool.query(`
@@ -41,7 +43,7 @@ const initDB = async () => {
                 fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);
-        console.log('-> Infraestructura PostgreSQL Conectada y Segura.');
+        console.log('-> Estructura PostgreSQL activa, verificada y protegida.');
     } catch (err) {
         console.error('Error inicializando base de datos:', err.message);
     }
@@ -49,46 +51,46 @@ const initDB = async () => {
 
 initDB();
 
-// Verificador y Automatizador de Gastos/Inversiones Fijas al Inicio de Mes
+// Lógica de Automatización de Gastos/Inversiones Fijas Recurrentes
 const procesarAutomatizacionesMes = async () => {
     try {
         const hoy = new Date();
         const mesActual = hoy.getMonth() + 1;
         const anioActual = hoy.getFullYear();
 
-        // Lista de automatizaciones fijas que deseas inyectar todos los meses automáticamente
-        const automatizacionesFijas = [
-            { desc: "🤖 [Auto] Compra MSCI World", cant: 100.00, tipo: "inversion", cat: "inicio_mes_auto" },
-            { desc: "🤖 [Auto] Compra Nasdaq-100", cant: 30.00, tipo: "inversion", cat: "inicio_mes_auto" },
-            { desc: "🤖 [Auto] Compra Mercados Emergentes", cant: 20.00, tipo: "inversion", cat: "inicio_mes_auto" },
+        // Tu estrategia de inversión automatizada descrita
+        const estrategiaInversiones = [
+            { desc: "🤖 [Auto] Compra MSCI World USD (acc)", cant: 100.00, tipo: "inversion", cat: "inicio_mes_auto" },
+            { desc: "🤖 [Auto] Compra NASDAQ-100 EUR (acc)", cant: 30.00, tipo: "inversion", cat: "inicio_mes_auto" },
+            { desc: "🤖 [Auto] Compra FTSE Emerging Markets", cant: 20.00, tipo: "inversion", cat: "inicio_mes_auto" },
             { desc: "🤖 [Auto] Compra Ethereum (ETH)", cant: 15.00, tipo: "inversion", cat: "inicio_mes_auto" }
         ];
 
-        for (const auto of automatizacionesFijas) {
-            // Verificar si esta automatización ya fue ejecutada en el mes en curso
+        for (const activo of estrategiaInversiones) {
+            // Evitar duplicaciones del mismo mes/año comprobando la descripción exacta
             const check = await pool.query(
                 `SELECT * FROM movimientos 
                  WHERE descripcion = $1 
                  AND EXTRACT(MONTH FROM fecha) = $2 
                  AND EXTRACT(YEAR FROM fecha) = $3`,
-                [auto.desc, mesActual, anioActual]
+                [activo.desc, mesActual, anioActual]
             );
 
-            // Si no existe registro este mes, el servidor lo introduce de forma totalmente autónoma
+            // Si el mes en curso aún no cuenta con el registro, el sistema lo inyecta autónomamente
             if (check.rows.length === 0) {
                 await pool.query(
                     "INSERT INTO movimientos (descripcion, cantidad, tipo, categoria) VALUES ($1, $2, $3, $4)",
-                    [auto.desc, auto.cant, auto.tipo, auto.cat]
+                    [activo.desc, activo.cant, activo.tipo, activo.cat]
                 );
-                console.log(`-> Automatización ejecutada con éxito: ${auto.desc}`);
+                console.log(`-> Inyección automatizada mensual completada con éxito: ${activo.desc}`);
             }
         }
     } catch (err) {
-        console.error("Error en proceso secundario de automatizaciones:", err.message);
+        console.error("Error en el motor secundario de automatizaciones:", err.message);
     }
 };
 
-// API: Autenticación
+// API: Login de acceso
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
     try {
@@ -101,10 +103,10 @@ app.post('/api/login', async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// API: Obtener movimientos con ejecución automática latente
+// API: Lectura y verificación de flujo latente mensual
 app.get('/api/movimientos', async (req, res) => {
     try {
-        // Cada vez que el cliente refresca el dashboard, el servidor comprueba el calendario
+        // Ejecución en segundo plano de compras fijas al iniciar o consultar la app
         await procesarAutomatizacionesMes();
 
         const result = await pool.query("SELECT * FROM movimientos ORDER BY fecha DESC");
@@ -116,19 +118,19 @@ app.get('/api/movimientos', async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// API: Registrar operaciones con soporte para FECHA PERSONALIZADA
+// API: Creación con soporte para fechas personalizadas del calendario
 app.post('/api/movimientos', async (req, res) => {
     const { descripcion, cantidad, tipo, categoria, fecha_personalizada } = req.body;
     try {
         let result;
         if (fecha_personalizada) {
-            // Si el usuario eligió una fecha en el calendario, se fuerza su almacenamiento con marca horaria limpia
+            // Almacenar fecha elegida por el usuario con marca de tiempo limpia
             result = await pool.query(
                 "INSERT INTO movimientos (descripcion, cantidad, tipo, categoria, fecha) VALUES ($1, $2, $3, $4, $5) RETURNING *",
                 [descripcion, cantidad, tipo, categoria, `${fecha_personalizada} 12:00:00`]
             );
         } else {
-            // Si se deja vacío, entra la marca temporal automática del sistema (hoy)
+            // Registro inmediato con marca temporal automática del servidor (hoy)
             result = await pool.query(
                 "INSERT INTO movimientos (descripcion, cantidad, tipo, categoria) VALUES ($1, $2, $3, $4) RETURNING *",
                 [descripcion, cantidad, tipo, categoria]
@@ -138,7 +140,7 @@ app.post('/api/movimientos', async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// API: Eliminar
+// API: Eliminación
 app.delete('/api/movimientos/:id', async (req, res) => {
     try {
         await pool.query("DELETE FROM movimientos WHERE id = $1", [req.params.id]);
@@ -147,5 +149,5 @@ app.delete('/api/movimientos/:id', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Servidor Quantum Financiero activo en puerto ${PORT}`);
+    console.log(`Servidor de Finanzas Quantum activo y operativo en el puerto ${PORT}`);
 });
