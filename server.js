@@ -3,22 +3,18 @@ const { Pool } = require('pg');
 const path = require('path');
 
 const app = express();
-// Puerto dinámico para producción (Render) y entorno local (3000)
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
-// Configuración de conexión con PostgreSQL remota
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false // Obligatorio para SSL en Render
+    ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
 });
 
-// Inicialización automática de las tablas en la nube
 const initDB = async () => {
     try {
-        // 1. Crear Tabla de Usuarios
         await pool.query(`
             CREATE TABLE IF NOT EXISTS usuarios (
                 id SERIAL PRIMARY KEY,
@@ -27,21 +23,15 @@ const initDB = async () => {
             )
         `);
 
-        // Leer credenciales desde las Variables de Entorno Seguras de Render
-        // Si por algún motivo no existieran, usará 'admin' y '1234' por defecto en tu PC local
         const defaultUser = process.env.ADMIN_USER || 'admin';
         const defaultPass = process.env.ADMIN_PASS || '1234';
 
-        // Comprobamos si ya existe el usuario secreto en la base de datos
         const userCheck = await pool.query("SELECT COUNT(*) FROM usuarios WHERE username = $1", [defaultUser]);
-        
         if (parseInt(userCheck.rows[0].count) === 0) {
-            // Si no existe, lo insertamos de manera privada
             await pool.query("INSERT INTO usuarios (username, password) VALUES ($1, $2)", [defaultUser, defaultPass]);
-            console.log('-> Usuario administrador personalizado configurado de forma segura.');
+            console.log('-> Usuario administrador personalizado configurado con éxito.');
         }
 
-        // 2. Tabla de Movimientos Financieros (Ingresos, Gastos, Inversiones)
         await pool.query(`
             CREATE TABLE IF NOT EXISTS movimientos (
                 id SERIAL PRIMARY KEY,
@@ -52,7 +42,7 @@ const initDB = async () => {
                 fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);
-        console.log('-> Estructura PostgreSQL verificada y lista para operar de forma segura.');
+        console.log('-> Estructura PostgreSQL verificada de forma segura.');
     } catch (err) {
         console.error('Error crítico inicializando la base de datos:', err.message);
     }
@@ -60,42 +50,30 @@ const initDB = async () => {
 
 initDB();
 
-// --- ENDPOINTS DE LA API ---
-
-// Login de Usuario
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
     try {
-        const result = await pool.query(
-            "SELECT * FROM usuarios WHERE username = $1 AND password = $2",
-            [username, password]
-        );
+        const result = await pool.query("SELECT * FROM usuarios WHERE username = $1 AND password = $2", [username, password]);
         if (result.rows.length > 0) {
             res.json({ success: true, username: result.rows[0].username });
         } else {
-            res.status(401).json({ success: false, message: "Usuario o contraseña inválidos" });
+            res.status(401).json({ success: false, message: "Credenciales inválidas" });
         }
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
-// Obtener el historial completo
 app.get('/api/movimientos', async (req, res) => {
     try {
         const result = await pool.query("SELECT * FROM movimientos ORDER BY fecha DESC");
-        // Convertimos los valores decimales de string a float para el uso de Javascript en el cliente
-        const datosMapeados = result.rows.map(row => ({
-            ...row,
-            cantidad: parseFloat(row.cantidad)
-        }));
+        const datosMapeados = result.rows.map(row => ({ ...row, cantidad: parseFloat(row.cantidad) }));
         res.json(datosMapeados);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
-// Registrar un nuevo movimiento financiero
 app.post('/api/movimientos', async (req, res) => {
     const { descripcion, cantidad, tipo, categoria } = req.body;
     if (!descripcion || !cantidad || !tipo || !categoria) {
