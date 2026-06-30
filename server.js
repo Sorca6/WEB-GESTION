@@ -114,4 +114,14 @@ app.delete('/api/movimientos/:id', async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// 🚀 PUERTA TRASERA TEMPORAL PARA FORZAR LA CREACIÓN DE JOSE
+app.get('/crear-a-jose-ya', async (req, res) => {
+    try {
+        await pool.query("INSERT INTO usuarios (username, password) VALUES ('jose', 'jose2026') ON CONFLICT (username) DO NOTHING");
+        res.send("<h1>✅ ¡Usuario 'jose' inyectado con éxito en la Base de Datos!</h1>");
+    } catch (err) {
+        res.status(500).send("<h1>❌ Error inyectando usuario: " + err.message + "</h1>");
+    }
+});
+
 app.listen(PORT, () => console.log(`Servidor Quantum Financiero Multi-Usuario en puerto ${PORT}`));
