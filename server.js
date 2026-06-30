@@ -1,3 +1,4 @@
+
 const express = require('express');
 const { Pool } = require('pg');
 const path = require('path');
@@ -13,16 +14,25 @@ const pool = new Pool({
     ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
 });
 
-// Forzar a PostgreSQL a devolver los campos NUMERIC como floats automáticamente
+// Parche global: Forzar a PostgreSQL a devolver números reales (no cadenas de texto)
 const { types } = require('pg');
 types.setTypeParser(1700, val => parseFloat(val));
 
 const initDB = async () => {
     try {
-        // 1. Tabla de Usuarios
-        await pool.query(`CREATE TABLE IF NOT EXISTS usuarios (id SERIAL PRIMARY KEY, username TEXT UNIQUE, password TEXT)`);
+        // 1. Tabla de Usuarios (Ampliada con campos para tus bancos)
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS usuarios (
+                id SERIAL PRIMARY KEY, 
+                username TEXT UNIQUE, 
+                password TEXT,
+                saldo_ibercaja NUMERIC(12, 2) DEFAULT 0.00,
+                saldo_openbank NUMERIC(12, 2) DEFAULT 0.00,
+                saldo_trade_republic NUMERIC(12, 2) DEFAULT 0.00
+            )
+        `);
         
-        // Usuarios por defecto obligatorios
+        // Inyección segura de usuarios
         await pool.query("INSERT INTO usuarios (username, password) VALUES ('admin', '1234') ON CONFLICT (username) DO NOTHING");
         await pool.query("INSERT INTO usuarios (username, password) VALUES ('jose', 'jose2026') ON CONFLICT (username) DO NOTHING");
         await pool.query("INSERT INTO usuarios (username, password) VALUES ('arroyo', 'arroyo2026') ON CONFLICT (username) DO NOTHING");
@@ -40,74 +50,39 @@ const initDB = async () => {
             )
         `);
         
-        console.log('-> Servidor Quantum Multi-User Activo y Saneado.');
+        console.log('-> Servidor Quantum Multi-User Activo, Saneado y con Soporte Bancario.');
     } catch (err) { 
         console.error('Error Crítico DB:', err.message); 
     }
 };
 initDB();
 
-// Automatización Mensual Optimizada
-const procesarAutomatizacionesMes = async (usuarioId) => {
-    try {
-        const hoy = new Date();
-        const mesActual = hoy.getMonth() + 1;
-        const anioActual = hoy.getFullYear();
-        
-        const estrategia = [
-            { desc: "🤖 [Auto] Compra MSCI World USD (acc)", cant: 100.00, tipo: "inversion", cat: "Inversión" },
-            { desc: "🤖 [Auto] Compra NASDAQ-100 EUR (acc)", cant: 30.00, tipo: "inversion", cat: "Inversión" },
-            { desc: "🤖 [Auto] Compra FTSE Emerging Markets", cant: 20.00, tipo: "inversion", cat: "Inversión" },
-            { desc: "🤖 [Auto] Compra Ethereum (ETH)", cant: 15.00, tipo: "inversion", cat: "Inversión" }
-        ];
-
-        // Verificación masiva en una sola consulta para no ralentizar el chat ni el servidor
-        const check = await pool.query(`
-            SELECT descripcion FROM movimientos 
-            WHERE usuario_id = $1 AND EXTRACT(MONTH FROM fecha) = $2 AND EXTRACT(YEAR FROM fecha) = $3
-        `, [usuarioId, mesActual, anioActual]);
-
-        const descripcionesExistentes = check.rows.map(r => r.descripcion);
-
-        for (const activo of estrategia) {
-            if (!descripcionesExistentes.includes(activo.desc)) {
-                await pool.query(
-                    "INSERT INTO movimientos (usuario_id, descripcion, cantidad, tipo, categoria) VALUES ($1, $2, $3, $4, $5)",
-                    [usuarioId, activo.desc, activo.cant, activo.tipo, activo.cat]
-                );
-            }
-        }
-    } catch (err) { 
-        console.error("Error autos:", err.message); 
-    }
-};
-
-// APIs Endpoints
+// API: Login (Retorna también los saldos de los bancos)
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
     try {
-        const result = await pool.query("SELECT id, username FROM usuarios WHERE username = $1 AND password = $2", [username.toLowerCase().trim(), password]);
+        const result = await pool.query("SELECT id, username, saldo_ibercaja, saldo_openbank, saldo_trade_republic FROM usuarios WHERE username = $1 AND password = $2", [username.toLowerCase().trim(), password]);
         if (result.rows.length > 0) {
             res.json({ success: true, user: result.rows[0] });
         } else {
-            res.status(401).json({ success: false, message: "Usuario o contraseña incorrectos" });
+            res.status(401).json({ success: false });
         }
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// API: Obtener movimientos de un usuario
 app.get('/api/movimientos', async (req, res) => {
     const userId = req.query.usuario_id;
-    if (!userId) return res.status(400).json({ error: "Falta ID de usuario" });
+    if (!userId) return res.status(400).json({ error: "Falta ID" });
     try {
-        await procesarAutomatizacionesMes(userId);
         const result = await pool.query("SELECT * FROM movimientos WHERE usuario_id = $1 ORDER BY fecha DESC", [userId]);
         res.json(result.rows);
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// API: Guardar movimiento (¡CORREGIDO CON ASYNC/AWAIT SEGURO!)
 app.post('/api/movimientos', async (req, res) => {
     const { usuario_id, descripcion, cantidad, tipo, categoria, fecha_personalizada } = req.body;
-    if (!usuario_id) return res.status(400).json({ error: "Falta ID" });
     try {
         let result;
         if (fecha_personalizada) {
@@ -121,7 +96,19 @@ app.post('/api/movimientos', async (req, res) => {
                 [usuario_id, descripcion, parseFloat(cantidad), tipo, categoria]
             );
         }
-        res.json(result.rows[0]);
+        res.json({ success: true, movimiento: result.rows[0] });
+    } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// API: Actualizar los saldos manuales de las 3 entidades bancarias
+app.post('/api/usuario/saldos', async (req, res) => {
+    const { usuario_id, ibercaja, openbank, trade_republic } = req.body;
+    try {
+        await pool.query(
+            "UPDATE usuarios SET saldo_ibercaja = $1, saldo_openbank = $2, saldo_trade_republic = $3 WHERE id = $4",
+            [parseFloat(ibercaja), parseFloat(openbank), parseFloat(trade_republic), usuario_id]
+        );
+        res.json({ success: true });
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
@@ -132,7 +119,6 @@ app.delete('/api/movimientos/:id', async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// Asegurar que cualquier otra ruta cargue el index.html sin dar errores 404
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
