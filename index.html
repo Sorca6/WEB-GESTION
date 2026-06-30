@@ -43,7 +43,7 @@
             
             <div class="bg-slate-800/80 p-6 rounded-xl border border-slate-700 space-y-4">
                 <div class="flex justify-between items-center">
-                    <h2 class="text-xl font-bold text-white flex items-center gap-2">🏢 Distribución del Patrimonio por Bancos</h2>
+                    <h2 class="text-xl font-bold text-white">🏢 Distribución del Patrimonio por Bancos</h2>
                     <div class="text-right">
                         <p class="text-xs text-slate-400 uppercase">Patrimonio Total Consolidado</p>
                         <h1 id="txt-patrimonio-total" class="text-3xl font-extrabold text-emerald-400">0.00 €</h1>
@@ -179,17 +179,22 @@
         async function ejecutarLogin() {
             const u = document.getElementById('username').value;
             const p = document.getElementById('password').value;
-            const res = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: u, password: p })
-            });
-            if(res.ok) {
-                const data = await res.json();
-                usuarioActivo = data.user;
-                localStorage.setItem('user_360', JSON.stringify(usuarioActivo));
-                cargarDashboard();
-            } else {
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: u, password: p })
+                });
+                if(res.ok) {
+                    const data = await res.json();
+                    usuarioActivo = data.user;
+                    localStorage.setItem('user_360', JSON.stringify(usuarioActivo));
+                    document.getElementById('login-error').classList.add('hidden');
+                    cargarDashboard();
+                } else {
+                    document.getElementById('login-error').classList.remove('hidden');
+                }
+            } catch(e) {
                 document.getElementById('login-error').classList.remove('hidden');
             }
         }
@@ -199,7 +204,6 @@
             document.getElementById('dashboard-section').classList.remove('hidden');
             document.getElementById('lbl-usuario').innerText = usuarioActivo.username.toUpperCase();
             
-            // Pintar saldos bancarios guardados en BD
             document.getElementById('bank-ibercaja').value = usuarioActivo.saldo_ibercaja || 0;
             document.getElementById('bank-openbank').value = usuarioActivo.saldo_openbank || 0;
             document.getElementById('bank-trade').value = usuarioActivo.saldo_trade_republic || 0;
@@ -214,12 +218,21 @@
 
         async function solicitarMovimientos() {
             if(!usuarioActivo) return;
-            const res = await fetch(`/api/movimientos?usuario_id=${usuarioActivo.id}`);
-            listaMovimientos = await res.json();
+            try {
+                const res = await fetch(`/api/movimientos?usuario_id=${usuarioActivo.id}`);
+                if(res.ok) {
+                    const data = await res.json();
+                    // Evita fallos forzando que si no viene array, asuma array vacío
+                    listaMovimientos = Array.isArray(data) ? data : [];
+                } else {
+                    listaMovimientos = [];
+                }
+            } catch (err) {
+                listaMovimientos = [];
+            }
             actualizarUI();
         }
 
-        // ¡AQUÍ ESTÁ EL FIX CRÍTICO! AHORA ESPERA A QUE TERMINE DE GRABAR ANTES DE PEDIR LA LISTA
         async function guardarMovimiento() {
             const descripcion = document.getElementById('form-desc').value;
             const cantidad = document.getElementById('form-cant').value;
@@ -227,27 +240,31 @@
             const categoria = document.getElementById('form-cat').value;
             const fecha_personalizada = document.getElementById('form-fecha').value;
 
-            if(!descripcion || !cantidad) return alert('Por favor rellena descripción y monto.');
+            if(!descripcion || !cantidad) return alert('Rellena la descripción y el monto.');
 
-            const res = await fetch('/api/movimientos', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    usuario_id: usuarioActivo.id,
-                    descripcion, cantidad, tipo, categoria, fecha_personalizada
-                })
-            });
+            try {
+                const res = await fetch('/api/movimientos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        usuario_id: usuarioActivo.id,
+                        descripcion, cantidad, tipo, categoria, fecha_personalizada
+                    })
+                });
 
-            if(res.ok) {
-                document.getElementById('form-desc').value = '';
-                document.getElementById('form-cant').value = '';
-                document.getElementById('form-fecha').value = '';
-                // Forzar espera del refresco de pantalla
-                await solicitarMovimientos();
+                if(res.ok) {
+                    document.getElementById('form-desc').value = '';
+                    document.getElementById('form-cant').value = '';
+                    document.getElementById('form-fecha').value = '';
+                    await solicitarMovimientos();
+                } else {
+                    alert('Error en el servidor al intentar registrar el movimiento.');
+                }
+            } catch(e) {
+                alert('Error de red al registrar movimiento.');
             }
         }
 
-        // Guarda los saldos en la nube de forma automática mientras escribes (Debounce)
         function guardarSaldosBancarios() {
             calcularPatrimonioTotal();
             clearTimeout(timeoutSaldos);
@@ -256,21 +273,24 @@
                 const op = document.getElementById('bank-openbank').value || 0;
                 const tr = document.getElementById('bank-trade').value || 0;
 
-                await fetch('/api/usuario/saldos', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        usuario_id: usuarioActivo.id,
-                        ibercaja: ib, openbank: op, trade_republic: tr
-                    })
-                });
+                try {
+                    await fetch('/api/usuario/saldos', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            usuario_id: usuarioActivo.id,
+                            ibercaja: ib, openbank: op, trade_republic: tr
+                        })
+                    });
 
-                // Actualizar localstorage interno
-                usuarioActivo.saldo_ibercaja = parseFloat(ib);
-                usuarioActivo.saldo_openbank = parseFloat(op);
-                usuarioActivo.saldo_trade_republic = parseFloat(tr);
-                localStorage.setItem('user_360', JSON.stringify(usuarioActivo));
-            }, 1000);
+                    usuarioActivo.saldo_ibercaja = parseFloat(ib);
+                    usuarioActivo.saldo_openbank = parseFloat(op);
+                    usuarioActivo.saldo_trade_republic = parseFloat(tr);
+                    localStorage.setItem('user_360', JSON.stringify(usuarioActivo));
+                } catch(e) {
+                    console.error("Error guardando saldos");
+                }
+            }, 800);
         }
 
         function calcularPatrimonioTotal() {
@@ -282,7 +302,7 @@
         }
 
         async function borrarMovimiento(id) {
-            if(!confirm('¿Seguro?')) return;
+            if(!confirm('¿Seguro que deseas eliminar este movimiento?')) return;
             const res = await fetch(`/api/movimientos/${id}`, { method: 'DELETE' });
             if(res.ok) await solicitarMovimientos();
         }
@@ -292,29 +312,34 @@
             const tabla = document.getElementById('tabla-movimientos');
             tabla.innerHTML = '';
 
-            listaMovimientos.forEach(m => {
-                if(m.tipo === 'ingreso') ingresos += m.cantidad;
-                if(m.tipo === 'gasto') gastos += m.cantidad;
-                if(m.tipo === 'ahorros') ahorros += m.cantidad;
-                if(m.tipo === 'inversion') inversiones += m.cantidad;
+            if (listaMovimientos.length === 0) {
+                tabla.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500">No hay movimientos registrados aún.</td></tr>`;
+            } else {
+                listaMovimientos.forEach(m => {
+                    const cant = parseFloat(m.cantidad) || 0;
+                    if(m.tipo === 'ingreso') ingresos += cant;
+                    if(m.tipo === 'gasto') gastos += cant;
+                    if(m.tipo === 'ahorros') ahorros += cant;
+                    if(m.tipo === 'inversion') inversiones += cant;
 
-                let colorMonto = m.tipo === 'ingreso' ? 'text-emerald-400' : (m.tipo === 'gasto' ? 'text-rose-400' : 'text-amber-400');
-                let signo = m.tipo === 'gasto' ? '-' : '+';
-                let f = new Date(m.fecha).toLocaleDateString('es-ES');
+                    let colorMonto = m.tipo === 'ingreso' ? 'text-emerald-400' : (m.tipo === 'gasto' ? 'text-rose-400' : 'text-amber-400');
+                    let signo = m.tipo === 'gasto' ? '-' : '+';
+                    let f = new Date(m.fecha).toLocaleDateString('es-ES');
 
-                tabla.innerHTML += `
-                    <tr class="hover:bg-slate-700/30 transition">
-                        <td class="p-3 text-slate-400">${f}</td>
-                        <td class="p-3 font-medium text-slate-200">${m.descripcion}</td>
-                        <td class="p-3 text-slate-400"><span class="bg-slate-900 px-2 py-0.5 rounded text-xs">${m.categoria}</span></td>
-                        <td class="p-3 uppercase text-xs font-bold tracking-wider">${m.tipo}</td>
-                        <td class="p-3 text-right font-bold ${colorMonto}">${signo}${m.cantidad.toFixed(2)} €</td>
-                        <td class="p-3 text-center">
-                            <button onclick="borrarMovimiento(${m.id})" class="text-red-400 hover:text-red-300 text-xs">Eliminar</button>
-                        </td>
-                    </tr>
-                `;
-            });
+                    tabla.innerHTML += `
+                        <tr class="hover:bg-slate-700/30 transition">
+                            <td class="p-3 text-slate-400">${f}</td>
+                            <td class="p-3 font-medium text-slate-200">${m.descripcion}</td>
+                            <td class="p-3 text-slate-400"><span class="bg-slate-900 px-2 py-0.5 rounded text-xs">${m.categoria}</span></td>
+                            <td class="p-3 uppercase text-xs font-bold tracking-wider text-slate-400">${m.tipo}</td>
+                            <td class="p-3 text-right font-bold ${colorMonto}">${signo}${cant.toFixed(2)} €</td>
+                            <td class="p-3 text-center">
+                                <button onclick="borrarMovimiento(${m.id})" class="text-red-400 hover:text-red-300 text-xs bg-red-500/10 px-2 py-1 rounded border border-red-500/20">Eliminar</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
 
             document.getElementById('kpi-ingresos').innerText = `+${ingresos.toFixed(2)} €`;
             document.getElementById('kpi-gastos').innerText = `-${gastos.toFixed(2)} €`;
@@ -328,13 +353,20 @@
         function renderizarGraficos(i, g, a, inv) {
             const ctx = document.getElementById('chartFinanzas').getContext('2d');
             if(chartInstancia) chartInstancia.destroy();
+            
+            // Si todo está a cero, pintamos una gráfica vacía para que no tire error Chart.js
+            const totalFlujo = i + g + a + inv;
+            const dataData = totalFlujo === 0 ? [1, 0, 0, 0] : [i, g, a, inv];
+            const dataLabels = totalFlujo === 0 ? ['Sin Datos', 'Gastos', 'Ahorros', 'Inversión'] : ['Ingresos', 'Gastos', 'Ahorros', 'Inversión'];
+            const dataColors = totalFlujo === 0 ? ['#475569', '#f43f5e', '#3b82f6', '#f59e0b'] : ['#10b981', '#f43f5e', '#3b82f6', '#f59e0b'];
+
             chartInstancia = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Ingresos', 'Gastos', 'Ahorros', 'Inversión'],
+                    labels: dataLabels,
                     datasets: [{
-                        data: [i, g, a, inv],
-                        backgroundColor: ['#10b981', '#f43f5e', '#3b82f6', '#f59e0b'],
+                        data: dataData,
+                        backgroundColor: dataColors,
                         borderWidth: 2,
                         borderColor: '#1e293b'
                     }]
@@ -342,7 +374,7 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: '#f8fafc' } } }
+                    plugins: { legend: { labels: { color: '#f8fafc' }, position: 'bottom' } }
                 }
             });
         }
