@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finanzas 360 Pro</title>
+    <title>Finanzas 360 Avanzado</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex items-center justify-center p-2 sm:p-6">
 
     <div id="login-card" class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
         <div class="text-center mb-6">
             <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Finanzas 360</h2>
-            <p class="text-sm text-gray-500 mt-1">Controla tus ingresos, gastos e inversiones de forma permanente</p>
+            <p class="text-sm text-gray-500 mt-1">Control integral y permanente de tu capital</p>
         </div>
         <form id="login-form" class="space-y-4">
             <div>
@@ -22,7 +23,7 @@
                 <label class="block text-xs font-semibold uppercase text-gray-600 tracking-wider">Contraseña</label>
                 <input type="password" id="password" class="mt-1 block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition" required>
             </div>
-            <p id="login-error" class="text-red-500 text-xs hidden font-medium">⚠️ Usuario o contraseña incorrectos (admin/1234)</p>
+            <p id="login-error" class="text-red-500 text-xs hidden font-medium">⚠️ Credenciales incorrectas</p>
             <button type="submit" class="w-full bg-slate-900 text-white py-3 rounded-xl font-medium hover:bg-slate-800 shadow-md transition duration-200">Entrar al Panel</button>
         </form>
     </div>
@@ -31,8 +32,8 @@
         
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-100 pb-4">
             <div>
-                <h1 class="text-2xl font-bold tracking-tight text-gray-900">Dashboard Financiero</h1>
-                <p class="text-xs text-gray-400">Sincronización en la nube activa con PostgreSQL</p>
+                <h1 class="text-2xl font-bold tracking-tight text-gray-900">Dashboard Financiero Avanzado</h1>
+                <p class="text-xs text-gray-400">Nube activa con PostgreSQL y Analíticas</p>
             </div>
             <button id="logout-btn" class="bg-gray-100 text-gray-600 px-4 py-2 rounded-xl text-xs font-semibold hover:bg-red-50 hover:text-red-600 transition">Cerrar Sesión</button>
         </div>
@@ -52,14 +53,28 @@
             </div>
         </div>
 
+        <div class="bg-gray-50 border border-gray-100 p-5 rounded-2xl space-y-4">
+            <div class="flex justify-between items-center flex-wrap gap-2">
+                <h3 class="text-base font-bold text-gray-800">Análisis y Distribución Visual</h3>
+                <select id="chart-period" onchange="actualizarGrafico()" class="px-3 py-1.5 bg-white border rounded-xl text-xs font-semibold shadow-sm focus:outline-none">
+                    <option value="mes">📅 Este Mes</option>
+                    <option value="semana">📆 Esta Semana</option>
+                    <option value="todos">📊 Todo el Historial</option>
+                </select>
+            </div>
+            <div class="relative w-full max-w-md mx-auto" style="height: 260px;">
+                <canvas id="analyticsChart"></canvas>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             <div class="bg-gray-50 border border-gray-100 p-5 rounded-2xl h-fit">
                 <h3 class="text-base font-bold text-gray-800 mb-4">Registrar Movimiento</h3>
                 <form id="finance-form" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-500">Descripción / Concepto</label>
-                        <input type="text" id="tx-desc" class="mt-1 block w-full px-3 py-2 bg-white border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej. Compra, Nómina, Acciones..." required>
+                        <label class="block text-xs font-semibold text-gray-500">Descripción</label>
+                        <input type="text" id="tx-desc" class="mt-1 block w-full px-3 py-2 bg-white border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej. Compra, Nómina..." required>
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-gray-500">Importe (€)</label>
@@ -74,7 +89,7 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-500">Categoría / Clasificación</label>
+                        <label class="block text-xs font-semibold text-gray-500">Categoría</label>
                         <select id="tx-category" class="mt-1 block w-full px-3 py-2 bg-white border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="sueldo">💼 Sueldo / Ingresos</option>
                             <option value="ocio">🍿 Ocio y Restauración</option>
@@ -90,11 +105,17 @@
 
             <div class="lg:col-span-2 space-y-4">
                 
-                <div class="flex flex-wrap gap-2 border-b border-gray-100 pb-3">
-                    <button onclick="filtrarMovimientos('todos')" class="filter-btn active bg-slate-900 text-white px-4 py-1.5 rounded-xl text-xs font-medium transition">Todos</button>
-                    <button onclick="filtrarMovimientos('ingreso')" class="filter-btn bg-gray-100 text-gray-600 hover:bg-green-100 hover:text-green-700 px-4 py-1.5 rounded-xl text-xs font-medium transition">Ingresos</button>
-                    <button onclick="filtrarMovimientos('gasto')" class="filter-btn bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-700 px-4 py-1.5 rounded-xl text-xs font-medium transition">Gastos</button>
-                    <button onclick="filtrarMovimientos('inversion')" class="filter-btn bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-700 px-4 py-1.5 rounded-xl text-xs font-medium transition">Inversiones</button>
+                <div class="flex flex-wrap justify-between items-center gap-4 border-b border-gray-100 pb-3">
+                    <div class="flex flex-wrap gap-1.5">
+                        <button onclick="filtrarMovimientos('todos')" class="filter-btn active bg-slate-900 text-white px-3.5 py-1.5 rounded-xl text-xs font-medium transition">Todos</button>
+                        <button onclick="filtrarMovimientos('ingreso')" class="filter-btn bg-gray-100 text-gray-600 hover:bg-green-100 hover:text-green-700 px-3.5 py-1.5 rounded-xl text-xs font-medium transition">Ingresos</button>
+                        <button onclick="filtrarMovimientos('gasto')" class="filter-btn bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-700 px-3.5 py-1.5 rounded-xl text-xs font-medium transition">Gastos</button>
+                        <button onclick="filtrarMovimientos('inversion')" class="filter-btn bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-700 px-3.5 py-1.5 rounded-xl text-xs font-medium transition">Inversiones</button>
+                    </div>
+                    
+                    <button onclick="exportarCSV()" class="bg-emerald-600 text-white hover:bg-emerald-700 px-3 py-1.5 rounded-xl text-xs font-semibold shadow-sm transition flex items-center gap-1">
+                        📥 Exportar Tabla (.CSV)
+                    </button>
                 </div>
 
                 <div class="overflow-x-auto border border-gray-100 rounded-xl">
@@ -106,8 +127,7 @@
                                 <th class="px-4 py-3 text-right">Cantidad</th>
                             </tr>
                         </thead>
-                        <tbody id="finance-list" class="divide-y divide-gray-100 text-gray-600">
-                            </tbody>
+                        <tbody id="finance-list" class="divide-y divide-gray-100 text-gray-600"></tbody>
                     </table>
                 </div>
             </div>
@@ -118,8 +138,8 @@
     <script>
         let todosLosMovimientos = [];
         let filtroActual = 'todos';
+        let miGrafico = null; // Instancia global de Chart.js
 
-        // Elementos del DOM
         const loginCard = document.getElementById('login-card');
         const loginForm = document.getElementById('login-form');
         const loginError = document.getElementById('login-error');
@@ -133,29 +153,25 @@
         const txCategory = document.getElementById('tx-category');
         const financeList = document.getElementById('finance-list');
 
-        // Evento de Login mediante Fetch API
+        // Login
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            try {
-                const res = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-                const data = await res.json();
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await res.json();
 
-                if (res.ok && data.success) {
-                    loginCard.classList.add('hidden');
-                    dashboard.classList.remove('hidden');
-                    cargarDatos();
-                } else {
-                    loginError.classList.remove('hidden');
-                }
-            } catch (err) {
-                console.error("Error de conexión:", err);
+            if (res.ok && data.success) {
+                loginCard.classList.add('hidden');
+                dashboard.classList.remove('hidden');
+                cargarDatos();
+            } else {
+                loginError.classList.remove('hidden');
             }
         });
 
@@ -165,43 +181,34 @@
             loginForm.reset();
         });
 
-        // Evento para Guardar Datos en el Servidor
+        // Guardar Datos
         financeForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            try {
-                const res = await fetch('/api/movimientos', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        descripcion: txDesc.value,
-                        cantidad: parseFloat(txAmount.value),
-                        tipo: txType.value,
-                        categoria: txCategory.value
-                    })
-                });
-
-                if (res.ok) {
-                    financeForm.reset();
-                    cargarDatos(); // Recargar el estado global actualizado
-                }
-            } catch (err) {
-                console.error("Error al guardar el movimiento:", err);
+            const res = await fetch('/api/movimientos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    descripcion: txDesc.value,
+                    cantidad: parseFloat(txAmount.value),
+                    tipo: txType.value,
+                    categoria: txCategory.value
+                })
+            });
+            if (res.ok) {
+                financeForm.reset();
+                cargarDatos();
             }
         });
 
-        // Cargar Datos de la Base de Datos
+        // Cargar Base de Datos
         async function cargarDatos() {
-            try {
-                const res = await fetch('/api/movimientos');
-                todosLosMovimientos = await res.json();
-                calcularResumenes();
-                renderizarTabla();
-            } catch (err) {
-                console.error("Error al leer datos:", err);
-            }
+            const res = await fetch('/api/movimientos');
+            todosLosMovimientos = await res.json();
+            calcularResumenes();
+            renderizarTabla();
+            actualizarGrafico(); // Refrescar gráficos al cambiar datos
         }
 
-        // Calcular los totales de los paneles superiores
         function calcularResumenes() {
             let ingresos = 0, gastos = 0, inversiones = 0;
             todosLosMovimientos.forEach(m => {
@@ -214,34 +221,23 @@
             document.getElementById('total-inversiones').textContent = `${inversiones.toFixed(2)} €`;
         }
 
-        // Filtrar movimientos por Botón de Control
         function filtrarMovimientos(tipo) {
             filtroActual = tipo;
-            
-            // Reajustar clases visuales de los botones
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.classList.remove('bg-slate-900', 'text-white', 'active');
                 btn.classList.add('bg-gray-100', 'text-gray-600');
             });
-            
-            // Asignar estado activo al botón presionado
             event.target.classList.remove('bg-gray-100', 'text-gray-600');
             event.target.classList.add('bg-slate-900', 'text-white', 'active');
-
             renderizarTabla();
         }
 
-        // Renderizar dinámicamente el listado en la tabla HTML
         function renderizarTabla() {
             financeList.innerHTML = '';
-            
-            const filtrados = todosLosMovimientos.filter(m => {
-                if (filtroActual === 'todos') return true;
-                return m.tipo === filtroActual;
-            });
+            const filtrados = todosLosMovimientos.filter(m => filtroActual === 'todos' || m.tipo === filtroActual);
 
             if(filtrados.length === 0) {
-                financeList.innerHTML = `<tr><td colspan="3" class="px-4 py-4 text-center text-gray-400 text-xs">No hay registros para mostrar</td></tr>`;
+                financeList.innerHTML = `<tr><td colspan="3" class="px-4 py-4 text-center text-gray-400 text-xs">Sin registros</td></tr>`;
                 return;
             }
 
@@ -249,7 +245,6 @@
                 const fila = document.createElement('tr');
                 let colorClase = 'text-green-600 font-semibold';
                 let prefijo = '+';
-
                 if (m.tipo === 'gasto') { colorClase = 'text-red-600 font-semibold'; prefijo = '-'; }
                 if (m.tipo === 'inversion') { colorClase = 'text-blue-600 font-semibold'; prefijo = '⚙️'; }
 
@@ -260,6 +255,87 @@
                 `;
                 financeList.appendChild(fila);
             });
+        }
+
+        // --- SISTEMA DINÁMICO DE GRÁFICOS (Chart.js) ---
+        function actualizarGrafico() {
+            const periodo = document.getElementById('chart-period').value;
+            const ahora = new Date();
+            
+            // Filtrar movimientos basándose en la fecha (Semana / Mes / Todos)
+            const movimientosFiltrados = todosLosMovimientos.filter(m => {
+                if (periodo === 'todos') return true;
+                const fechaMovimiento = new Date(m.fecha);
+                const diferenciaTiempo = ahora - fechaMovimiento;
+                const diferenciaDias = diferenciaTiempo / (1000 * 60 * 60 * 24);
+                
+                if (periodo === 'semana') return diferenciaDias <= 7;
+                if (periodo === 'mes') return diferenciaDias <= 30;
+                return true;
+            });
+
+            // Agrupar totales
+            let ingresos = 0, gastos = 0, inversiones = 0;
+            movimientosFiltrados.forEach(m => {
+                if (m.tipo === 'ingreso') ingresos += m.cantidad;
+                if (m.tipo === 'gasto') gastos += m.cantidad;
+                if (m.tipo === 'inversion') inversiones += m.cantidad;
+            });
+
+            const ctx = document.getElementById('analyticsChart').getContext('2d');
+
+            // Destruir gráfico previo si ya existía para evitar solapamientos visuales
+            if (miGrafico) { miGrafico.destroy(); }
+
+            // Generar nuevo gráfico circular
+            miGrafico = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Ingresos (€)', 'Gastos (€)', 'Inversiones (€)'],
+                    datasets: [{
+                        data: [ingresos, gastos, inversiones],
+                        backgroundColor: ['#22c55e', '#ef4444', '#3b82f6'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+                    }
+                }
+            });
+        }
+
+        // --- FUNCIÓN DE EXPORTACIÓN A CSV ---
+        function exportarCSV() {
+            if (todosLosMovimientos.length === 0) {
+                alert("No hay datos para exportar.");
+                return;
+            }
+
+            // Encabezados del archivo Excel / CSV
+            let contenidoCsv = "Concepto,Categoria,Tipo,Cantidad (EUR),Fecha\n";
+            
+            todosLosMovimientos.forEach(m => {
+                // Reemplazamos comas en la descripción para evitar romper las celdas del CSV
+                const descSegura = m.descripcion.replace(/,/g, " ");
+                contenidoCsv += `${descSegura},${m.categoria},${m.tipo},${m.cantidad},${m.fecha}\n`;
+            });
+
+            // Crear el enlace oculto de descarga en el navegador
+            const blob = new Blob([contenidoCsv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute("href", url);
+            link.setAttribute("download", `Reporte_Finanzas_${new Date().toISOString().slice(0,10)}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>
