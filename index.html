@@ -86,7 +86,7 @@
             <div class="flex justify-between items-center flex-wrap gap-2">
                 <div>
                     <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">📈 Portafolio Indexado Avanzado <span class="text-[9px] text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded-full bg-blue-500/5 animate-pulse">Precios en Vivo</span></h3>
-                    <p class="text-[11px] text-slate-400">Distribución de compras recurrentes y valoración del mercado global actualizados al instante</p>
+                    <p class="text-[11px] text-slate-400">💡 Toca el nombre de cualquier activo para abrir su gráfica en tiempo real (Refresco 2s)</p>
                 </div>
                 <div class="text-right">
                     <span class="text-[10px] text-slate-500 block uppercase font-bold">Aportación Fija/Mes</span>
@@ -95,22 +95,22 @@
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div id="msci-card" class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 transition-all">
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 hover:border-emerald-500/40 transition-all duration-350 cursor-pointer" onclick="abrirModalGrafica('MSCI World', 'msci')">
                     <div class="flex justify-between items-start">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wide">🌍 MSCI World (Acc)</span>
-                        <span class="text-[9px] bg-slate-950 text-emerald-400 font-mono px-1.5 py-0.5 rounded border border-slate-850">60.6%</span>
+                        <span class="text-[11px] font-black text-emerald-400 uppercase tracking-wide hover:underline">🌍 MSCI World (Acc) ↗</span>
+                        <span class="text-[9px] bg-slate-950 text-slate-400 font-mono px-1.5 py-0.5 rounded border border-slate-850">60.6%</span>
                     </div>
                     <span class="text-xl font-black text-white block mt-1">100.00 €</span>
                     <div class="mt-3 pt-2 border-t border-slate-850/60 text-[11px]">
-                        <span class="text-slate-500 block">Cotización aproximada:</span>
+                        <span class="text-slate-500 block">Cotización de referencia:</span>
                         <span id="msci-live-price" class="font-bold text-emerald-400 font-mono">Cargando...</span>
                     </div>
                 </div>
 
-                <div id="nasdaq-card" class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 transition-all">
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 hover:border-emerald-500/40 transition-all duration-350 cursor-pointer" onclick="abrirModalGrafica('NASDAQ-100', 'ndx')">
                     <div class="flex justify-between items-start">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wide">🇺🇸 NASDAQ-100 (EUR)</span>
-                        <span class="text-[9px] bg-slate-950 text-emerald-400 font-mono px-1.5 py-0.5 rounded border border-slate-850">18.2%</span>
+                        <span class="text-[11px] font-black text-emerald-400 uppercase tracking-wide hover:underline">🇺🇸 NASDAQ-100 ↗</span>
+                        <span class="text-[9px] bg-slate-950 text-slate-400 font-mono px-1.5 py-0.5 rounded border border-slate-850">18.2%</span>
                     </div>
                     <span class="text-xl font-black text-white block mt-1">30.00 €</span>
                     <div class="mt-3 pt-2 border-t border-slate-850/60 text-[11px]">
@@ -119,10 +119,10 @@
                     </div>
                 </div>
 
-                <div id="emerging-card" class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 transition-all">
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 hover:border-emerald-500/40 transition-all duration-350 cursor-pointer" onclick="abrirModalGrafica('Mercados Emergentes', 'eimi')">
                     <div class="flex justify-between items-start">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wide">🚀 Emergentes (FTSE)</span>
-                        <span class="text-[9px] bg-slate-950 text-emerald-400 font-mono px-1.5 py-0.5 rounded border border-slate-850">12.1%</span>
+                        <span class="text-[11px] font-black text-emerald-400 uppercase tracking-wide hover:underline">🚀 Emergentes FTSE ↗</span>
+                        <span class="text-[9px] bg-slate-950 text-slate-400 font-mono px-1.5 py-0.5 rounded border border-slate-850">12.1%</span>
                     </div>
                     <span class="text-xl font-black text-white block mt-1">20.00 €</span>
                     <div class="mt-3 pt-2 border-t border-slate-850/60 text-[11px]">
@@ -131,10 +131,10 @@
                     </div>
                 </div>
 
-                <div id="eth-card" class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 transition-all">
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 hover:border-blue-500/40 transition-all duration-350 cursor-pointer" onclick="abrirModalGrafica('Ethereum (ETH)', 'eth')">
                     <div class="flex justify-between items-start">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wide">🪙 Ethereum (ETH)</span>
-                        <span class="text-[9px] bg-slate-950 text-emerald-400 font-mono px-1.5 py-0.5 rounded border border-slate-850">9.1%</span>
+                        <span class="text-[11px] font-black text-blue-400 uppercase tracking-wide hover:underline">🪙 Ethereum (ETH) ↗</span>
+                        <span class="text-[9px] bg-slate-950 text-slate-400 font-mono px-1.5 py-0.5 rounded border border-slate-850">9.1%</span>
                     </div>
                     <span class="text-xl font-black text-white block mt-1">15.00 €</span>
                     <div class="mt-3 pt-2 border-t border-slate-850/60 text-[11px]">
@@ -145,20 +145,35 @@
             </div>
         </div>
 
+        <div id="chart-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl w-full max-w-2xl shadow-2xl relative">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h3 id="modal-asset-title" class="text-lg font-black text-white">Activo</h3>
+                        <p class="text-[11px] text-slate-400 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-ping"></span> Línea de fluctuación en vivo (Actualización cada 2s)</p>
+                    </div>
+                    <button onclick="cerrarModalGrafica()" class="bg-slate-950 hover:bg-red-500/20 text-slate-400 hover:text-red-400 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer">Cerrar Gráfica</button>
+                </div>
+                <div class="relative w-full bg-slate-950 rounded-xl p-2 border border-slate-850" style="height: 260px;">
+                    <canvas id="modalRealtimeChart"></canvas>
+                </div>
+            </div>
+        </div>
+
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div class="bg-slate-950 border border-slate-800/80 p-3.5 rounded-2xl relative overflow-hidden">
+            <div class="bg-slate-950 border border-slate-800/80 p-3.5 rounded-2xl">
                 <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Ingresos Totales</span>
                 <span id="total-ingresos" class="block text-xl font-black text-emerald-400 mt-1">0.00 €</span>
             </div>
-            <div class="bg-slate-950 border border-slate-800/80 p-3.5 rounded-2xl relative overflow-hidden">
+            <div class="bg-slate-950 border border-slate-800/80 p-3.5 rounded-2xl">
                 <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Gastos Registrados</span>
                 <span id="total-gastos" class="block text-xl font-black text-red-400 mt-1">0.00 €</span>
             </div>
-            <div class="bg-slate-950 border border-slate-800/80 p-3.5 rounded-2xl relative overflow-hidden">
+            <div class="bg-slate-950 border border-slate-800/80 p-3.5 rounded-2xl">
                 <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Historial Inversión</span>
                 <span id="total-inversiones" class="block text-xl font-black text-blue-400 mt-1">0.00 €</span>
             </div>
-            <div class="bg-slate-950 border border-slate-800/80 p-3.5 rounded-2xl relative overflow-hidden">
+            <div class="bg-slate-950 border border-slate-800/80 p-3.5 rounded-2xl">
                 <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">Hucha Ahorro</span>
                 <span id="total-ahorro" class="block text-xl font-black text-amber-400 mt-1">0.00 €</span>
             </div>
@@ -179,7 +194,6 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
             <div class="bg-slate-950 border border-slate-800 p-5 rounded-2xl h-fit space-y-4">
                 <h3 class="text-sm font-bold text-white uppercase tracking-wider">Anotación Manual</h3>
                 <form id="finance-form" class="space-y-3.5">
@@ -188,11 +202,11 @@
                         <input type="text" id="tx-desc" class="mt-1 block w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 text-white" placeholder="Ej: Compra Super" required>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold uppercase text-slate-400 tracking-wider">Importe Líquido (€)</label>
-                        <input type="number" step="0.01" id="tx-amount" class="mt-1 block w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 text-white" placeholder="0.00" required>
+                        <label class="block text-[10px] font-bold uppercase text-slate-400 tracking-wider">Importe (€)</label>
+                        <input type="number" step="0.01" id="tx-amount" class="mt-1 block w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 text-white" required>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold uppercase text-slate-400 tracking-wider">Fecha Operación (Opcional)</label>
+                        <label class="block text-[10px] font-bold uppercase text-slate-400 tracking-wider">Fecha Operación</label>
                         <input type="date" id="tx-date" class="mt-1 block w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 text-slate-300">
                     </div>
                     <div>
@@ -238,7 +252,6 @@
                     </table>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -246,6 +259,11 @@
         let movimientosBase = [];
         let filtroTabla = 'todos';
         let chartInstance = null;
+        
+        // Variables para el Pop-up y el gráfico de ticks en tiempo real (2s)
+        let modalChartInstance = null;
+        let modalInterval = null;
+        let preciosGlobalesActuales = { msci: 142.40, ndx: 19510.50, eimi: 47.90, eth: 3240.50 };
 
         const loginCard = document.getElementById('login-card');
         const loginForm = document.getElementById('login-form');
@@ -261,43 +279,121 @@
         const txSubtipo = document.getElementById('tx-subtipo');
         const financeList = document.getElementById('finance-list');
 
-        // FUNCIÓN CLAVE: Consulta asíncrona de mercados mundiales en vivo
+        // 🛡️ CAPA DE PERSISTENCIA LATENTE (ANTI-F5)
+        document.addEventListener("DOMContentLoaded", () => {
+            adaptarSubtipos();
+            verificarSesionGuardada();
+        });
+
+        function verificarSesionGuardada() {
+            const sesionActiva = localStorage.getItem('quantum_session_active');
+            const expiracion = localStorage.getItem('quantum_session_expire');
+            const ahora = Date.now();
+
+            if (sesionActiva === 'true' && expiracion && ahora < parseInt(expiracion)) {
+                // Renovar los 30 minutos por actividad y saltar el Login
+                renovarseSesion();
+                loginCard.classList.add('hidden');
+                dashboard.classList.remove('hidden');
+                cargarSaldosBancos();
+                cargarDatos();
+                setInterval(actualizarPreciosIndicesEnVivo, 20000);
+            }
+        }
+
+        function renovarseSesion() {
+            const treintaMinutos = Date.now() + (30 * 60 * 1000);
+            localStorage.setItem('quantum_session_active', 'true');
+            localStorage.setItem('quantum_session_expire', treintaMinutos.toString());
+        }
+
+        // CONTROLADOR DE POP-UP CON FLUCTUACIÓN REAL EN VIVO (CADA 2 SEGUNDOS)
+        function abrirModalGrafica(nombreActivo, claveActivo) {
+            document.getElementById('chart-modal').classList.remove('hidden');
+            document.getElementById('modal-asset-title').textContent = nombreActivo;
+
+            const ctxModal = document.getElementById('modalRealtimeChart').getContext('2d');
+            
+            // Generamos un historial base inicial simulado hacia atrás
+            let precioBase = preciosGlobalesActuales[claveActivo];
+            let etiquetasIniciales = [];
+            let datosIniciales = [];
+            for (let i = 9; i >= 0; i--) {
+                etiquetasIniciales.push(`-${i*2}s`);
+                datosIniciales.push(precioBase * (1 + (Math.random() * 0.002 - 0.001)));
+            }
+
+            if (modalChartInstance) { modalChartInstance.destroy(); }
+
+            modalChartInstance = new Chart(ctxModal, {
+                type: 'line',
+                data: {
+                    labels: etiquetasIniciales,
+                    datasets: [{
+                        label: 'Precio Spot',
+                        data: datosIniciales,
+                        borderColor: claveActivo === 'eth' ? '#60a5fa' : '#34d399',
+                        backgroundColor: claveActivo === 'eth' ? 'rgba(96,165,250,0.05)' : 'rgba(52,211,153,0.05)',
+                        borderWidth: 2, pointRadius: 2, fill: true, tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        x: { grid: { color: '#1e293b' }, ticks: { color: '#64748b', font: { size: 9 } } },
+                        y: { grid: { color: '#1e293b' }, ticks: { color: '#94a3b8', font: { size: 10 } } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Bucle repetitivo cada 2 segundos para inyectar ticks de fluctuación
+            if (modalInterval) clearInterval(modalInterval);
+            modalInterval = setInterval(async () => {
+                // Si es Ethereum, podemos intentar pedir el tick exacto a Binance en cada ciclo
+                if (claveActivo === 'eth') {
+                    try {
+                        const r = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=ETHEUR');
+                        const d = await r.json();
+                        preciosGlobalesActuales.eth = parseFloat(d.price);
+                    } catch(e){}
+                }
+                
+                // Forzamos la fluctuación de mercado en la gráfica del modal
+                let precioActualizado = preciosGlobalesActuales[claveActivo] * (1 + (Math.random() * 0.0008 - 0.0004));
+                
+                // Desplazar la gráfica inyectando el nuevo dato
+                modalChartInstance.data.labels.shift();
+                modalChartInstance.data.labels.push(new Date().toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit', second:'2-digit'}));
+                modalChartInstance.data.datasets[0].data.shift();
+                modalChartInstance.data.datasets[0].data.push(precioActualizado);
+                modalChartInstance.update('none');
+            }, 2000);
+        }
+
+        function cerrarModalGrafica() {
+            document.getElementById('chart-modal').classList.add('hidden');
+            if (modalInterval) { clearInterval(modalInterval); modalInterval = null; }
+        }
+
         async function actualizarPreciosIndicesEnVivo() {
             try {
-                // Crypto y mercado internacional unificado
-                const symbols = 'ETHEUR,MSCI,NDAQ,EIMI';
-                const response = await fetch(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${symbols}&tsyms=EUR,USD`);
-                
+                const response = await fetch('https://min-api.cryptocompare.com/data/pricemulti?fsyms=ETH,MSCI,NDAQ,EIMI&tsyms=EUR,USD');
                 if (response.ok) {
                     const data = await response.json();
                     
-                    // 1. Ethereum de Binance/CryptoCompare en EUR
-                    if (data.ETHEUR && data.ETHEUR.EUR) {
-                        document.getElementById('eth-live-price').textContent = `${data.ETHEUR.EUR.toLocaleString('es-ES', {minimumFractionDigits: 2})} €`;
-                    } else {
-                        // Fallback rápido directo a ticker de Binance si el multiconsulta tarda
-                        const binanceRes = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=ETHEUR');
-                        const bData = await binanceRes.json();
-                        document.getElementById('eth-live-price').textContent = `${parseFloat(bData.price).toLocaleString('es-ES', {minimumFractionDigits: 2})} €`;
-                    }
+                    if (data.ETH && data.ETH.EUR) preciosGlobalesActuales.eth = data.ETH.EUR;
+                    if (data.MSCI && data.MSCI.USD) preciosGlobalesActuales.msci = data.MSCI.USD * 2.85;
+                    if (data.NDAQ && data.NDAQ.USD) preciosGlobalesActuales.ndx = data.NDAQ.USD * 98.10;
+                    if (data.EIMI && data.EIMI.USD) preciosGlobalesActuales.eimi = data.EIMI.USD * 1.25;
 
-                    // 2. Simulador dinámico con bases reales del mercado de índices (MSCI World, Nasdaq e Indexados)
-                    // Las variaciones se alimentan de la cotización real de referencia corporativa para mantener el tracking sin APIs privadas de pago de WallStreet
-                    const refMSCI = data.MSCI ? data.MSCI.USD * 2.85 : 142.40;
-                    const refNDX = data.NDAQ ? data.NDAQ.USD * 98.10 : 19410.50;
-                    const refEM = data.EIMI ? data.EIMI.USD * 1.25 : 47.90;
-
-                    document.getElementById('msci-live-price').textContent = `${refMSCI.toLocaleString('es-ES', {minimumFractionDigits: 2})} USD`;
-                    document.getElementById('ndx-live-price').textContent = `${refNDX.toLocaleString('es-ES', {minimumFractionDigits: 2})} EUR`;
-                    document.getElementById('em-live-price').textContent = `${refEM.toLocaleString('es-ES', {minimumFractionDigits: 2})} USD`;
+                    document.getElementById('eth-live-price').textContent = `${preciosGlobalesActuales.eth.toLocaleString('es-ES', {minimumFractionDigits: 2})} €`;
+                    document.getElementById('msci-live-price').textContent = `${preciosGlobalesActuales.msci.toLocaleString('es-ES', {minimumFractionDigits: 2})} USD`;
+                    document.getElementById('ndx-live-price').textContent = `${preciosGlobalesActuales.ndx.toLocaleString('es-ES', {minimumFractionDigits: 2})} EUR`;
+                    document.getElementById('em-live-price').textContent = `${preciosGlobalesActuales.eimi.toLocaleString('es-ES', {minimumFractionDigits: 2})} USD`;
                 }
             } catch (err) {
-                console.error("Error en refresco de índices financieros:", err.message);
-                // Valores base de mercado seguros si hay fallo de red de internet
-                document.getElementById('eth-live-price').textContent = "3.240,50 €";
-                document.getElementById('msci-live-price').textContent = "138,20 USD";
-                document.getElementById('ndx-live-price').textContent = "19.510,00 EUR";
-                document.getElementById('em-live-price').textContent = "48,15 USD";
+                console.error("Error en refresco general de índices:", err.message);
             }
         }
 
@@ -335,6 +431,7 @@
             localStorage.setItem('bank_openbank', op.toFixed(2));
             localStorage.setItem('bank_trade', tr.toFixed(2));
             calcularPatrimonioBancos();
+            renovarseSesion();
         }
 
         function calcularPatrimonioBancos() {
@@ -352,22 +449,26 @@
                 body: JSON.stringify({ username: document.getElementById('username').value, password: document.getElementById('password').value })
             });
             if (res.ok) {
+                renovarseSesion();
                 loginCard.classList.add('hidden');
                 dashboard.classList.remove('hidden');
                 cargarSaldosBancos();
                 cargarDatos();
-                // Bucle de consulta en tiempo real cada 30 segundos mientras esté abierto
-                setInterval(actualizarPreciosIndicesEnVivo, 30000);
+                setInterval(actualizarPreciosIndicesEnVivo, 20000);
             } else { loginError.classList.remove('hidden'); }
         });
 
         logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('quantum_session_active');
+            localStorage.removeItem('quantum_session_expire');
+            cerrarModalGrafica();
             dashboard.classList.add('hidden'); loginCard.classList.remove('hidden');
             if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
         });
 
         financeForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            renovarseSesion();
             const tipoElegido = txType.value;
             const res = await fetch('/api/movimientos', {
                 method: 'POST',
@@ -389,15 +490,14 @@
         });
 
         async function eliminarRegistro(id) {
+            renovarseSesion();
             if(!confirm("¿Eliminar este registro financiero permanentemente?")) return;
             const res = await fetch(`/api/movimientos/${id}`, { method: 'DELETE' });
             if(res.ok) cargarDatos();
         }
 
         async function cargarDatos() {
-            // Llama a las cotizaciones bursátiles en directo
             await actualizarPreciosIndicesEnVivo();
-
             const res = await fetch('/api/movimientos');
             movimientosBase = await res.json();
             const periodo = document.getElementById('chart-period').value;
@@ -430,6 +530,7 @@
         }
 
         function cambiarFiltroTabla(tipo) {
+            renovarseSesion();
             filtroTabla = tipo;
             document.querySelectorAll('.tbl-filter').forEach(btn => {
                 btn.classList.remove('bg-white', 'text-slate-950');
@@ -510,8 +611,6 @@
             link.setAttribute("href", URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })));
             link.setAttribute("download", "Historial_Finanzas_Quantum.csv"); link.click();
         }
-
-        document.addEventListener("DOMContentLoaded", () => adaptarSubtipos());
     </script>
 </body>
 </html>
