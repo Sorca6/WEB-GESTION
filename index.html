@@ -15,7 +15,6 @@
     <div id="login-section" class="min-h-screen flex items-center justify-center">
         <div class="bg-slate-800 p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-700">
             <h1 class="text-3xl font-bold text-center mb-6 text-emerald-400">Finanzas 360</h1>
-            <p class="text-slate-400 text-sm text-center mb-6">Introduce tus credenciales (Jose / Arroyo)</p>
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm text-slate-300 font-medium mb-1">Usuario</label>
@@ -25,8 +24,8 @@
                     <label class="block text-sm text-slate-300 font-medium mb-1">Contraseña</label>
                     <input type="password" id="password" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-emerald-500">
                 </div>
-                <button onclick="ejecutarLogin()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-bold py-2.5 rounded-lg transition duration-200">Ingresar al Dashboard</button>
-                <p id="login-error" class="text-red-400 text-sm text-center mt-2 hidden">Credenciales inválidas.</p>
+                <button onclick="ejecutarLogin()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-bold py-2.5 rounded-lg transition">Ingresar</button>
+                <p id="login-error" class="text-red-400 text-sm text-center mt-2 hidden">Credenciales incorrectas.</p>
             </div>
         </div>
     </div>
@@ -42,21 +41,46 @@
 
         <main class="flex-1 p-6 max-w-7xl w-full mx-auto space-y-6">
             
+            <div class="bg-slate-800/80 p-6 rounded-xl border border-slate-700 space-y-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">🏢 Distribución del Patrimonio por Bancos</h2>
+                    <div class="text-right">
+                        <p class="text-xs text-slate-400 uppercase">Patrimonio Total Consolidado</p>
+                        <h1 id="txt-patrimonio-total" class="text-3xl font-extrabold text-emerald-400">0.00 €</h1>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-slate-900 p-4 rounded-lg border border-slate-700">
+                        <label class="block text-sm font-medium text-slate-300 mb-1">🏦 Ibercaja</label>
+                        <input type="number" step="0.01" id="bank-ibercaja" oninput="guardarSaldosBancarios()" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-white font-mono font-bold text-lg focus:border-emerald-500 focus:outline-none">
+                    </div>
+                    <div class="bg-slate-900 p-4 rounded-lg border border-slate-700">
+                        <label class="block text-sm font-medium text-slate-300 mb-1">🌐 Openbank</label>
+                        <input type="number" step="0.01" id="bank-openbank" oninput="guardarSaldosBancarios()" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-white font-mono font-bold text-lg focus:border-emerald-500 focus:outline-none">
+                    </div>
+                    <div class="bg-slate-900 p-4 rounded-lg border border-slate-700">
+                        <label class="block text-sm font-medium text-slate-300 mb-1">📈 Trade Republic</label>
+                        <input type="number" step="0.01" id="bank-trade" oninput="guardarSaldosBancarios()" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-white font-mono font-bold text-lg focus:border-emerald-500 focus:outline-none">
+                    </div>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
-                    <p class="text-sm text-slate-400">Ingresos Totales</p>
+                    <p class="text-sm text-slate-400">Ingresos Registrados</p>
                     <h3 id="kpi-ingresos" class="text-2xl font-bold text-emerald-400">+0.00 €</h3>
                 </div>
                 <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
-                    <p class="text-sm text-slate-400">Gastos Totales</p>
+                    <p class="text-sm text-slate-400">Gastos Registrados</p>
                     <h3 id="kpi-gastos" class="text-2xl font-bold text-rose-400">-0.00 €</h3>
                 </div>
                 <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
-                    <p class="text-sm text-slate-400">Ahorro Neto</p>
+                    <p class="text-sm text-slate-400">Ahorro en Flujo</p>
                     <h3 id="kpi-ahorros" class="text-2xl font-bold text-blue-400">0.00 €</h3>
                 </div>
                 <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
-                    <p class="text-sm text-slate-400">Capital Invertido</p>
+                    <p class="text-sm text-slate-400">Inversiones en Flujo</p>
                     <h3 id="kpi-inversiones" class="text-2xl font-bold text-amber-400">0.00 €</h3>
                 </div>
             </div>
@@ -88,7 +112,7 @@
                         <select id="form-cat" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white"></select>
                     </div>
                     <div>
-                        <label class="block text-xs text-slate-400 mb-1">Fecha Opcional (Vacío para hoy)</label>
+                        <label class="block text-xs text-slate-400 mb-1">Fecha Opcional</label>
                         <input type="date" id="form-fecha" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white">
                     </div>
                     <button onclick="guardarMovimiento()" class="w-full bg-emerald-500 text-slate-900 font-bold py-2 rounded text-sm hover:bg-emerald-400 transition">Registrar Movimiento</button>
@@ -97,11 +121,6 @@
                 <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 lg:col-span-2 flex flex-col justify-between">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg font-bold text-slate-200">Análisis Estructural</h2>
-                        <select id="filtro-periodo" onchange="renderizarGraficos()" class="bg-slate-900 border border-slate-700 rounded p-1 text-xs text-slate-300">
-                            <option value="todo">Histórico Completo</option>
-                            <option value="30">Últimos 30 días</option>
-                            <option value="90">Últimos 90 días</option>
-                        </select>
                     </div>
                     <div class="relative w-full h-64 flex justify-center">
                         <canvas id="chartFinanzas"></canvas>
@@ -110,16 +129,7 @@
             </div>
 
             <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-bold text-amber-400">📈 Monitor de ETFs & Activos en Tiempo Real</h2>
-                    <span class="text-xs text-slate-400 bg-slate-900 px-2 py-1 rounded">Auto-refresh activo (Simulado)</span>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4" id="etf-container">
-                    </div>
-            </div>
-
-            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-                <h2 class="text-lg font-bold text-slate-200 mb-3">Historial de Transacciones Registradas</h2>
+                <h2 class="text-lg font-bold text-slate-200 mb-3">Historial de Transacciones</h2>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-sm">
                         <thead>
@@ -132,8 +142,7 @@
                                 <th class="p-3 text-center">Acción</th>
                             </tr>
                         </thead>
-                        <tbody id="tabla-movimientos" class="divide-y divide-slate-700/50">
-                            </tbody>
+                        <tbody id="tabla-movimientos" class="divide-y divide-slate-700/50"></tbody>
                     </table>
                 </div>
             </div>
@@ -144,6 +153,7 @@
         let usuarioActivo = JSON.parse(localStorage.getItem('user_360')) || null;
         let listaMovimientos = [];
         let chartInstancia = null;
+        let timeoutSaldos = null;
 
         const categoriasPorTipo = {
             ingreso: ['Nómina', 'Dividendos', 'Ventas', 'Otros Ingresos'],
@@ -152,20 +162,9 @@
             inversion: ['Renta Variable (ETFs)', 'Criptomonedas', 'Acciones']
         };
 
-        // Monitoreo simulado en tiempo real de ETFs de alta fidelidad
-        let etfsData = [
-            { ticker: "MSCI World", nombre: "iShares Core MSCI World", precio: 94.25, cambio: 0.34 },
-            { ticker: "NASDAQ-100", nombre: "Invesco EQQQ NASDAQ", precio: 452.10, cambio: -0.12 },
-            { ticker: "FTSE Emerging", nombre: "Vanguard Emergentes", precio: 56.80, cambio: 0.85 },
-            { ticker: "Ethereum", nombre: "Ethereum (ETH/EUR)", precio: 3240.00, cambio: 2.45 }
-        ];
-
         window.onload = () => {
-            if(usuarioActivo) {
-                cargarDashboard();
-            }
+            if(usuarioActivo) cargarDashboard();
             actualizarCategorias();
-            bucleETFs();
         };
 
         function actualizarCategorias() {
@@ -180,41 +179,36 @@
         async function ejecutarLogin() {
             const u = document.getElementById('username').value;
             const p = document.getElementById('password').value;
-            
-            try {
-                const res = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: u, password: p })
-                });
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: u, password: p })
+            });
+            if(res.ok) {
                 const data = await res.json();
-                if(data.success) {
-                    usuarioActivo = data.user;
-                    localStorage.setItem('user_360', JSON.stringify(usuarioActivo));
-                    document.getElementById('login-error').classList.add('hidden');
-                    cargarDashboard();
-                } else {
-                    mostrarErrorLogin();
-                }
-            } catch {
-                mostrarErrorLogin();
+                usuarioActivo = data.user;
+                localStorage.setItem('user_360', JSON.stringify(usuarioActivo));
+                cargarDashboard();
+            } else {
+                document.getElementById('login-error').classList.remove('hidden');
             }
-        }
-
-        function mostrarErrorLogin() {
-            document.getElementById('login-error').classList.remove('hidden');
         }
 
         function cargarDashboard() {
             document.getElementById('login-section').classList.add('hidden');
             document.getElementById('dashboard-section').classList.remove('hidden');
             document.getElementById('lbl-usuario').innerText = usuarioActivo.username.toUpperCase();
+            
+            // Pintar saldos bancarios guardados en BD
+            document.getElementById('bank-ibercaja').value = usuarioActivo.saldo_ibercaja || 0;
+            document.getElementById('bank-openbank').value = usuarioActivo.saldo_openbank || 0;
+            document.getElementById('bank-trade').value = usuarioActivo.saldo_trade_republic || 0;
+
             solicitarMovimientos();
         }
 
         function logout() {
             localStorage.removeItem('user_360');
-            usuarioActivo = null;
             location.reload();
         }
 
@@ -225,6 +219,7 @@
             actualizarUI();
         }
 
+        // ¡AQUÍ ESTÁ EL FIX CRÍTICO! AHORA ESPERA A QUE TERMINE DE GRABAR ANTES DE PEDIR LA LISTA
         async function guardarMovimiento() {
             const descripcion = document.getElementById('form-desc').value;
             const cantidad = document.getElementById('form-cant').value;
@@ -234,7 +229,7 @@
 
             if(!descripcion || !cantidad) return alert('Por favor rellena descripción y monto.');
 
-            await fetch('/api/movimientos', {
+            const res = await fetch('/api/movimientos', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -243,16 +238,53 @@
                 })
             });
 
-            document.getElementById('form-desc').value = '';
-            document.getElementById('form-cant').value = '';
-            document.getElementById('form-fecha').value = '';
-            solicitarMovimientos();
+            if(res.ok) {
+                document.getElementById('form-desc').value = '';
+                document.getElementById('form-cant').value = '';
+                document.getElementById('form-fecha').value = '';
+                // Forzar espera del refresco de pantalla
+                await solicitarMovimientos();
+            }
+        }
+
+        // Guarda los saldos en la nube de forma automática mientras escribes (Debounce)
+        function guardarSaldosBancarios() {
+            calcularPatrimonioTotal();
+            clearTimeout(timeoutSaldos);
+            timeoutSaldos = setTimeout(async () => {
+                const ib = document.getElementById('bank-ibercaja').value || 0;
+                const op = document.getElementById('bank-openbank').value || 0;
+                const tr = document.getElementById('bank-trade').value || 0;
+
+                await fetch('/api/usuario/saldos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        usuario_id: usuarioActivo.id,
+                        ibercaja: ib, openbank: op, trade_republic: tr
+                    })
+                });
+
+                // Actualizar localstorage interno
+                usuarioActivo.saldo_ibercaja = parseFloat(ib);
+                usuarioActivo.saldo_openbank = parseFloat(op);
+                usuarioActivo.saldo_trade_republic = parseFloat(tr);
+                localStorage.setItem('user_360', JSON.stringify(usuarioActivo));
+            }, 1000);
+        }
+
+        function calcularPatrimonioTotal() {
+            const ib = parseFloat(document.getElementById('bank-ibercaja').value) || 0;
+            const op = parseFloat(document.getElementById('bank-openbank').value) || 0;
+            const tr = parseFloat(document.getElementById('bank-trade').value) || 0;
+            const total = ib + op + tr;
+            document.getElementById('txt-patrimonio-total').innerText = `${total.toFixed(2)} €`;
         }
 
         async function borrarMovimiento(id) {
-            if(!confirm('¿Seguro que deseas eliminar este registro?')) return;
-            await fetch(`/api/movimientos/${id}`, { method: 'DELETE' });
-            solicitarMovimientos();
+            if(!confirm('¿Seguro?')) return;
+            const res = await fetch(`/api/movimientos/${id}`, { method: 'DELETE' });
+            if(res.ok) await solicitarMovimientos();
         }
 
         function actualizarUI() {
@@ -278,7 +310,7 @@
                         <td class="p-3 uppercase text-xs font-bold tracking-wider">${m.tipo}</td>
                         <td class="p-3 text-right font-bold ${colorMonto}">${signo}${m.cantidad.toFixed(2)} €</td>
                         <td class="p-3 text-center">
-                            <button onclick="borrarMovimiento(${m.id})" class="text-red-400 hover:text-red-300 text-xs bg-red-500/10 px-2 py-1 rounded border border-red-500/20">Eliminar</button>
+                            <button onclick="borrarMovimiento(${m.id})" class="text-red-400 hover:text-red-300 text-xs">Eliminar</button>
                         </td>
                     </tr>
                 `;
@@ -289,34 +321,19 @@
             document.getElementById('kpi-ahorros').innerText = `${ahorros.toFixed(2)} €`;
             document.getElementById('kpi-inversiones').innerText = `${inversiones.toFixed(2)} €`;
 
-            renderizarGraficos();
+            calcularPatrimonioTotal();
+            renderizarGraficos(ingresos, gastos, ahorros, inversiones);
         }
 
-        function renderizarGraficos() {
-            const filtro = document.getElementById('filtro-periodo').value;
-            const ahora = new Date();
-            
-            let movimientosFiltrados = listaMovimientos.filter(m => {
-                if (filtro === 'todo') return true;
-                const fechaM = new Date(m.fecha);
-                const diffTime = Math.abs(ahora - fechaM);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                return diffDays <= parseInt(filtro);
-            });
-
-            let sumas = { ingreso: 0, gasto: 0, ahorros: 0, inversion: 0 };
-            movimientosFiltrados.forEach(m => sumas[m.tipo] += m.cantidad);
-
+        function renderizarGraficos(i, g, a, inv) {
             const ctx = document.getElementById('chartFinanzas').getContext('2d');
-            
             if(chartInstancia) chartInstancia.destroy();
-
             chartInstancia = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: ['Ingresos', 'Gastos', 'Ahorros', 'Inversión'],
                     datasets: [{
-                        data: [sumas.ingreso, sumas.gasto, sumas.ahorros, sumas.inversion],
+                        data: [i, g, a, inv],
                         backgroundColor: ['#10b981', '#f43f5e', '#3b82f6', '#f59e0b'],
                         borderWidth: 2,
                         borderColor: '#1e293b'
@@ -325,41 +342,8 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { color: '#f8fafc' } }
-                    }
+                    plugins: { legend: { labels: { color: '#f8fafc' } } }
                 }
-            });
-        }
-
-        function bucleETFs() {
-            // Simulación en tiempo real de variaciones en la bolsa cada 4 segundos
-            setInterval(() => {
-                etfsData.forEach(e => {
-                    let variacion = (Math.random() - 0.5) * 0.5;
-                    e.precio += variacion;
-                    e.cambio += variacion / 10;
-                });
-                pintarETFs();
-            }, 4000);
-            pintarETFs();
-        }
-
-        function pintarETFs() {
-            const box = document.getElementById('etf-container');
-            box.innerHTML = '';
-            etfsData.forEach(e => {
-                let col = e.cambio >= 0 ? 'text-emerald-400' : 'text-rose-400';
-                box.innerHTML += `
-                    <div class="bg-slate-900/50 p-4 rounded-lg border border-slate-700/60">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="font-bold text-white text-sm">${e.ticker}</span>
-                            <span class="text-xs px-1.5 py-0.5 rounded font-mono ${col}">${e.cambio >= 0 ? '+' : ''}${e.cambio.toFixed(2)}%</span>
-                        </div>
-                        <p class="text-[11px] text-slate-400 truncate mb-2">${e.nombre}</p>
-                        <p class="text-xl font-mono text-slate-200 font-bold">${e.precio.toFixed(2)} EUR</p>
-                    </div>
-                `;
             });
         }
     </script>
