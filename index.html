@@ -28,7 +28,7 @@
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 002-2V9a2 2 0 00-2-2h-1v-1a4 4 0 00-4-4H7a4 4 0 00-4 4v1H2a2 2 0 00-2 2v2a2 2 0 002 2h1v6a2 2 0 002 2z"/></svg>
             </div>
             <h2 class="text-3xl font-black text-white tracking-tight">Finanzas 360</h2>
-            <p class="text-xs text-slate-400 mt-1.5">Inteligencia patrimonial e inversión en tiempo real</p>
+            <p class="text-xs text-slate-400 mt-1.5">Inteligencia patrimonial multiusuario</p>
         </div>
         <form id="login-form" class="space-y-4">
             <div>
@@ -48,8 +48,8 @@
         
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800 pb-4">
             <div>
-                <h1 class="text-2xl font-black tracking-tight text-white flex items-center gap-2">Quantum Dashboard <span class="bg-emerald-500/10 text-emerald-400 text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded-full border border-emerald-500/20">Real-Time Engine</span></h1>
-                <p class="text-xs text-slate-400">Automatizaciones activas y cotizaciones bursátiles globales</p>
+                <h1 class="text-2xl font-black tracking-tight text-white flex items-center gap-2">Quantum Dashboard <span id="user-badge" class="bg-emerald-500/10 text-emerald-400 text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded-full border border-emerald-500/20">Usuario</span></h1>
+                <p class="text-xs text-slate-400">Automatizaciones activas y cotizaciones bursátiles individuales</p>
             </div>
             <button id="logout-btn" class="bg-slate-950 text-slate-400 px-4 py-2 rounded-xl text-xs font-bold hover:bg-red-500/10 hover:text-red-400 border border-slate-800 transition cursor-pointer">Cerrar Sesión</button>
         </div>
@@ -57,16 +57,16 @@
         <div class="bg-gradient-to-r from-slate-950 to-slate-900 p-5 rounded-2xl border border-blue-500/20 space-y-3">
             <div>
                 <h3 class="text-xs font-bold text-blue-400 uppercase tracking-wider flex items-center gap-2">🔄 Sistema de Automatizaciones Fijas recurrentes</h3>
-                <p class="text-[11px] text-slate-400">Control de inyección autónoma ejecutada por el servidor a principio de cada mes</p>
+                <p class="text-[11px] text-slate-400">Inyección autónoma ejecutada individualmente a principio de mes</p>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3" id="lista-automatizaciones-status">
-                <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 text-xs text-slate-500">Analizando registros mensuales...</div>
+                <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 text-xs text-slate-500">Analizando...</div>
             </div>
         </div>
 
         <div class="bg-slate-950 p-5 rounded-2xl space-y-4 border border-slate-800">
             <div class="flex justify-between items-center flex-wrap gap-2">
-                <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Posición Bancaria Global</h3>
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Posición Bancaria Personal</h3>
                 <div class="bg-slate-900 px-4 py-2 rounded-xl border border-slate-800">
                     <span class="text-[10px] text-slate-400 block font-bold uppercase tracking-wider">Patrimonio Líquido</span>
                     <span id="patrimonio-total-bancos" class="text-xl font-black text-emerald-400">0.00 €</span>
@@ -74,15 +74,15 @@
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800/60">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">🐖 Ibercaja (Ahorro)</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">🐖 Ibercaja</span>
                     <input type="number" step="0.01" id="saldo-ibercaja" onchange="guardarSaldosBancos()" class="w-full bg-slate-950 px-3 py-1.5 rounded-lg text-sm font-black text-white border border-slate-800">
                 </div>
                 <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800/60">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">💳 Openbank (Uso Diario)</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">💳 Openbank</span>
                     <input type="number" step="0.01" id="saldo-openbank" onchange="guardarSaldosBancos()" class="w-full bg-slate-950 px-3 py-1.5 rounded-lg text-sm font-black text-white border border-slate-800">
                 </div>
                 <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800/60">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">📈 Trade Republic (Efectivo)</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">📈 Trade Republic</span>
                     <input type="number" step="0.01" id="saldo-trade" onchange="guardarSaldosBancos()" class="w-full bg-slate-950 px-3 py-1.5 rounded-lg text-sm font-black text-white border border-slate-800">
                 </div>
             </div>
@@ -90,8 +90,8 @@
 
         <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-4">
             <div>
-                <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">📈 Portafolio Indexado Avanzado</h3>
-                <p class="text-[11px] text-slate-400">⚡ Toca cualquier tarjeta para analizar el historial interactivo real (1 Semana hasta 5 Años)</p>
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">📈 Portafolio Indexado</h3>
+                <p class="text-[11px] text-slate-400">⚡ Haz clic para ver el historial analítico real e interactivo (1S hasta 5A)</p>
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -102,7 +102,7 @@
                     </div>
                     <span class="text-xl font-black text-white block mt-1">100.00 €</span>
                     <div class="mt-3 pt-2 border-t border-slate-850/60 text-[11px]">
-                        <span class="text-slate-500 block">Cotización de referencia:</span>
+                        <span class="text-slate-500 block">Cotización Ref:</span>
                         <span id="msci-live-price" class="font-bold text-emerald-400 font-mono">Cargando...</span>
                     </div>
                 </div>
@@ -114,7 +114,7 @@
                     </div>
                     <span class="text-xl font-black text-white block mt-1">30.00 €</span>
                     <div class="mt-3 pt-2 border-t border-slate-850/60 text-[11px]">
-                        <span class="text-slate-500 block">Índice de referencia:</span>
+                        <span class="text-slate-500 block">Índice Ref:</span>
                         <span id="ndx-live-price" class="font-bold text-emerald-400 font-mono">Cargando...</span>
                     </div>
                 </div>
@@ -126,7 +126,7 @@
                     </div>
                     <span class="text-xl font-black text-white block mt-1">20.00 €</span>
                     <div class="mt-3 pt-2 border-t border-slate-850/60 text-[11px]">
-                        <span class="text-slate-500 block">Valor mercado ref:</span>
+                        <span class="text-slate-500 block">Valor Ref:</span>
                         <span id="em-live-price" class="font-bold text-emerald-400 font-mono">Cargando...</span>
                     </div>
                 </div>
@@ -138,7 +138,7 @@
                     </div>
                     <span class="text-xl font-black text-white block mt-1">15.00 €</span>
                     <div class="mt-3 pt-2 border-t border-slate-850/60 text-[11px]">
-                        <span class="text-slate-500 block">Precio Real ETH/EUR:</span>
+                        <span class="text-slate-500 block">Precio Real:</span>
                         <span id="eth-live-price" class="font-bold text-blue-400 font-mono">Conectando...</span>
                     </div>
                 </div>
@@ -150,7 +150,7 @@
                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                     <div>
                         <h3 id="modal-asset-title" class="text-lg font-black text-white">Activo</h3>
-                        <p class="text-[11px] text-slate-400">🎯 Desplaza el cursor sobre la línea para ver los precios históricos en esa fecha</p>
+                        <p class="text-[11px] text-slate-400">🎯 Desplaza el cursor por la gráfica para auditar importes históricos</p>
                     </div>
                     <button onclick="cerrarModalGrafica()" class="bg-slate-950 hover:bg-red-500/20 text-slate-400 hover:text-red-400 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer">Cerrar</button>
                 </div>
@@ -265,6 +265,7 @@
     </div>
 
     <script>
+        let usuarioSesionActiva = null; // Almacenamiento dinámico de sesión
         let movimientosBase = [];
         let filtroTabla = 'todos';
         let chartInstance = null;
@@ -295,12 +296,15 @@
         function verificarSesionGuardada() {
             const sesionActiva = localStorage.getItem('quantum_session_active');
             const expiracion = localStorage.getItem('quantum_session_expire');
+            const cachedUser = localStorage.getItem('quantum_user_data');
             const ahora = Date.now();
 
-            if (sesionActiva === 'true' && expiracion && ahora < parseInt(expiracion)) {
+            if (sesionActiva === 'true' && expiracion && ahora < parseInt(expiracion) && cachedUser) {
+                usuarioSesionActiva = JSON.parse(cachedUser);
                 renovarseSesion();
                 loginCard.classList.add('hidden');
                 dashboard.classList.remove('hidden');
+                document.getElementById('user-badge').textContent = usuarioSesionActiva.username;
                 cargarSaldosBancos();
                 cargarDatos();
                 setInterval(actualizarPreciosIndicesEnVivo, 25000);
@@ -311,6 +315,7 @@
             const tresHoras = Date.now() + (3 * 60 * 60 * 1000);
             localStorage.setItem('quantum_session_active', 'true');
             localStorage.setItem('quantum_session_expire', tresHoras.toString());
+            localStorage.setItem('quantum_user_data', JSON.stringify(usuarioSesionActiva));
         }
 
         async function abrirModalGrafica(nombreActivo, claveActivo) {
@@ -321,7 +326,6 @@
             await cambiarPeriodoHistorico('1m', 30);
         }
 
-        // CONTROLADOR DE CAMBIO DE VENTANA HISTÓRICA TOTALMENTE SANEADO
         async function cambiarPeriodoHistorico(idPeriodo, numDias) {
             document.querySelectorAll('[id^="btn-p-"]').forEach(b => b.classList.remove('bg-emerald-500', 'text-slate-950'));
             const btn = document.getElementById(`btn-p-${idPeriodo}`);
@@ -331,7 +335,6 @@
             let etiquetas = [];
             let datosPrecios = [];
             
-            // Forzamos a pedir Euros si es Ethereum, dólares para trackers de fondos globales
             const monedaTarget = (activoSeleccionadoClave === 'ETH') ? 'EUR' : 'USD';
 
             try {
@@ -343,17 +346,14 @@
                     listaTicks.forEach(tick => {
                         const dateObj = new Date(tick.time * 1000);
                         etiquetas.push(dateObj.toLocaleDateString('es-ES', {day: '2-digit', month: 'short'}));
-                        
                         let precioFinal = tick.close;
-                        // Escalado correcto solo aplicable a fondos indexados tradicionales maquetados
                         if(activoSeleccionadoClave === 'MSCI') precioFinal = tick.close * 2.85;
                         if(activoSeleccionadoClave === 'NDAQ') precioFinal = tick.close * 1.15;
                         if(activoSeleccionadoClave === 'EIMI') precioFinal = tick.close * 1.25;
-                        
                         datosPrecios.push(precioFinal);
                     });
                 }
-            } catch (e) { console.error("Error pidiendo histórico:", e); }
+            } catch (e) { console.error(e); }
 
             if (modalChartInstance) { modalChartInstance.destroy(); }
 
@@ -365,7 +365,7 @@
                         label: `Precio (${monedaTarget})`,
                         data: datosPrecios,
                         borderColor: activoSeleccionadoClave === 'ETH' ? '#60a5fa' : '#34d399',
-                        backgroundColor: activoSeleccionadoClave === 'ETH' ? 'rgba(96,165,250,0.01)' : 'rgba(52,211,153,0.01)',
+                        backgroundColor: 'rgba(52,211,153,0.01)',
                         borderWidth: 2, pointRadius: numDias > 100 ? 0 : 2, fill: true, tension: 0.1
                     }]
                 },
@@ -470,17 +470,20 @@
             });
         }
 
+        // Almacenamiento local de bancos separado por prefijo de usuario
         function cargarSaldosBancos() {
-            document.getElementById('saldo-ibercaja').value = localStorage.getItem('bank_ibercaja') || '0.00';
-            document.getElementById('saldo-openbank').value = localStorage.getItem('bank_openbank') || '0.00';
-            document.getElementById('saldo-trade').value = localStorage.getItem('bank_trade') || '0.00';
+            const prefijo = `bank_${usuarioSesionActiva.username}_`;
+            document.getElementById('saldo-ibercaja').value = localStorage.getItem(prefijo + 'ibercaja') || '0.00';
+            document.getElementById('saldo-openbank').value = localStorage.getItem(prefijo + 'openbank') || '0.00';
+            document.getElementById('saldo-trade').value = localStorage.getItem(prefijo + 'trade') || '0.00';
             calcularPatrimonioBancos();
         }
 
         function guardarSaldosBancos() {
-            localStorage.setItem('bank_ibercaja', (parseFloat(document.getElementById('saldo-ibercaja').value) || 0).toFixed(2));
-            localStorage.setItem('bank_openbank', (parseFloat(document.getElementById('saldo-openbank').value) || 0).toFixed(2));
-            localStorage.setItem('bank_trade', (parseFloat(document.getElementById('saldo-trade').value) || 0).toFixed(2));
+            const prefijo = `bank_${usuarioSesionActiva.username}_`;
+            localStorage.setItem(prefijo + 'ibercaja', (parseFloat(document.getElementById('saldo-ibercaja').value) || 0).toFixed(2));
+            localStorage.setItem(prefijo + 'openbank', (parseFloat(document.getElementById('saldo-openbank').value) || 0).toFixed(2));
+            localStorage.setItem(prefijo + 'trade', (parseFloat(document.getElementById('saldo-trade').value) || 0).toFixed(2));
             calcularPatrimonioBancos(); renovarseSesion();
         }
 
@@ -499,8 +502,11 @@
                 body: JSON.stringify({ username: document.getElementById('username').value, password: document.getElementById('password').value })
             });
             if (res.ok) {
+                const data = await res.json();
+                usuarioSesionActiva = data.user;
                 renovarseSesion();
                 loginCard.classList.add('hidden'); dashboard.classList.remove('hidden');
+                document.getElementById('user-badge').textContent = usuarioSesionActiva.username;
                 cargarSaldosBancos(); cargarDatos();
                 setInterval(actualizarPreciosIndicesEnVivo, 25000);
             } else { loginError.classList.remove('hidden'); }
@@ -509,6 +515,8 @@
         logoutBtn.addEventListener('click', () => {
             localStorage.removeItem('quantum_session_active');
             localStorage.removeItem('quantum_session_expire');
+            localStorage.removeItem('quantum_user_data');
+            usuarioSesionActiva = null;
             cerrarModalGrafica();
             dashboard.classList.add('hidden'); loginCard.classList.remove('hidden');
         });
@@ -519,6 +527,7 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    usuario_id: usuarioSesionActiva.id,
                     descripcion: txDesc.value, cantidad: parseFloat(txAmount.value),
                     tipo: txType.value, categoria: txSubtipo.value,
                     fecha_personalizada: txDate.value || null
@@ -539,7 +548,7 @@
 
         async function cargarDatos() {
             await actualizarPreciosIndicesEnVivo();
-            const res = await fetch('/api/movimientos');
+            const res = await fetch(`/api/movimientos?usuario_id=${usuarioSesionActiva.id}`);
             movimientosBase = await res.json();
             actualizarTarjetasDeAutomatizacionesStatus(movimientosBase);
 
@@ -641,7 +650,7 @@
             movimientosBase.forEach(m => { csv += `${m.fecha},${m.descripcion},${m.categoria},${m.tipo},${m.cantidad}\n`; });
             const link = document.createElement("a");
             link.setAttribute("href", URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })));
-            link.setAttribute("download", "Historial_Finanzas_Quantum.csv"); link.click();
+            link.setAttribute("download", `Historial_${usuarioSesionActiva.username}.csv`); link.click();
         }
     </script>
 </body>
