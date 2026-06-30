@@ -2,15 +2,35 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Finanzas 360 Ultimate v3</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <meta name="apple-mobile-web-app-title" content="Finanzas360">
+    
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-transparent">
+
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180' width='180' height='180'><rect width='180' height='180' rx='0' fill='%230f172a'/><circle cx='90' cy='90' r='50' fill='none' stroke='%2310b981' stroke-width='10'/><path d='M90 60 v60 M70 80 h40' stroke='%2310b981' stroke-width='10' stroke-linecap='round'/></svg>">
+
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-</head>
-<body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex items-center justify-center p-2 sm:p-6">
 
-    <div id="login-card" class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent; /* Elimina el destello gris feo al pulsar botones en iOS */
+            user-select: none; /* Evita que se seleccione texto al mantener pulsado el dedo accidentalmente */
+        }
+        input, select {
+            user-select: text !important; /* Permitir selección de texto solo en campos de datos */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex items-center justify-center p-2 sm:p-6 pb-safe pt-safe">
+
+    <div id="login-card" class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100 mx-3">
         <div class="text-center mb-6">
             <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Finanzas 360</h2>
             <p class="text-sm text-gray-500 mt-1">Control integral, analíticas y ahorro inteligente</p>
@@ -29,17 +49,17 @@
         </form>
     </div>
 
-    <div id="dashboard" class="hidden w-full max-w-6xl bg-white rounded-2xl shadow-xl border border-gray-100 p-4 sm:p-8 space-y-6">
+    <div id="dashboard" class="hidden w-full max-w-6xl bg-white rounded-2xl shadow-xl border border-gray-100 p-4 sm:p-8 space-y-6 mx-2">
         
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-100 pb-4">
             <div>
                 <h1 class="text-2xl font-bold tracking-tight text-gray-900">Ecosistema Financiero Personal</h1>
-                <p class="text-xs text-gray-400">Sincronización en la Nube Permanente Activa</p>
+                <p class="text-xs text-gray-400">Modo App Nativa de Escritorio Activo</p>
             </div>
             <button id="logout-btn" class="bg-gray-100 text-gray-600 px-4 py-2 rounded-xl text-xs font-semibold hover:bg-red-50 hover:text-red-600 transition">Cerrar Sesión</button>
         </div>
 
-        <div class="bg-slate-900 text-white p-6 rounded-2xl space-y-4 shadow-sm">
+        <div class="bg-slate-900 text-white p-5 rounded-2xl space-y-4 shadow-sm">
             <div class="flex justify-between items-center flex-wrap gap-2">
                 <div>
                     <h3 class="text-base font-bold tracking-tight">Posición Global Multibanco</h3>
@@ -51,86 +71,70 @@
                 </div>
             </div>
             
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-slate-900">
-                <div class="bg-white p-4 rounded-xl border border-slate-800 space-y-2">
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold uppercase tracking-wider text-gray-500">🐖 Ibercaja (Ahorro)</span>
-                    </div>
-                    <div class="flex gap-2">
-                        <input type="number" step="0.01" id="saldo-ibercaja" onchange="guardarSaldosBancos()" class="w-full bg-gray-50 px-3 py-1.5 rounded-lg text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500" value="0.00">
-                    </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-slate-900">
+                <div class="bg-white p-3.5 rounded-xl border border-slate-800 space-y-1">
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-gray-500 block">🐖 Ibercaja (Ahorro)</span>
+                    <input type="number" step="0.01" id="saldo-ibercaja" onchange="guardarSaldosBancos()" class="w-full bg-gray-50 px-2.5 py-1.5 rounded-lg text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500">
                 </div>
-                <div class="bg-white p-4 rounded-xl border border-slate-800 space-y-2">
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold uppercase tracking-wider text-gray-500">💳 Openbank (Diario)</span>
-                    </div>
-                    <div class="flex gap-2">
-                        <input type="number" step="0.01" id="saldo-openbank" onchange="guardarSaldosBancos()" class="w-full bg-gray-50 px-3 py-1.5 rounded-lg text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500" value="0.00">
-                    </div>
+                <div class="bg-white p-3.5 rounded-xl border border-slate-800 space-y-1">
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-gray-500 block">💳 Openbank (Diario)</span>
+                    <input type="number" step="0.01" id="saldo-openbank" onchange="guardarSaldosBancos()" class="w-full bg-gray-50 px-2.5 py-1.5 rounded-lg text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500">
                 </div>
-                <div class="bg-white p-4 rounded-xl border border-slate-800 space-y-2">
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold uppercase tracking-wider text-gray-500">📈 Trade Republic (Inversión)</span>
-                    </div>
-                    <div class="flex gap-2">
-                        <input type="number" step="0.01" id="saldo-trade" onchange="guardarSaldosBancos()" class="w-full bg-gray-50 px-3 py-1.5 rounded-lg text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500" value="0.00">
-                    </div>
+                <div class="bg-white p-3.5 rounded-xl border border-slate-800 space-y-1">
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-gray-500 block">📈 Trade Republic (Inversión)</span>
+                    <input type="number" step="0.01" id="saldo-trade" onchange="guardarSaldosBancos()" class="w-full bg-gray-50 px-2.5 py-1.5 rounded-lg text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500">
                 </div>
             </div>
-            <p class="text-[10px] text-slate-400 italic">💡 Nota: Los saldos de las cuentas se guardan automáticamente de forma segura al cambiar el número.</p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-            <div class="bg-green-50 border border-green-100 p-4 rounded-2xl">
-                <span class="block text-xs font-bold uppercase tracking-wider text-green-700">Ingresos del Periodo</span>
-                <span id="total-ingresos" class="block text-xl font-extrabold text-green-900 mt-1">0.00 €</span>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="bg-green-50 border border-green-100 p-3.5 rounded-2xl">
+                <span class="block text-[10px] font-bold uppercase tracking-wider text-green-700">Ingresos</span>
+                <span id="total-ingresos" class="block text-lg font-extrabold text-green-900 mt-0.5">0.00 €</span>
             </div>
-            <div class="bg-red-50 border border-red-100 p-4 rounded-2xl">
-                <span class="block text-xs font-bold uppercase tracking-wider text-red-700">Gastos del Periodo</span>
-                <span id="total-gastos" class="block text-xl font-extrabold text-red-900 mt-1">0.00 €</span>
+            <div class="bg-red-50 border border-red-100 p-3.5 rounded-2xl">
+                <span class="block text-[10px] font-bold uppercase tracking-wider text-red-700">Gastos</span>
+                <span id="total-gastos" class="block text-lg font-extrabold text-red-900 mt-0.5">0.00 €</span>
             </div>
-            <div class="bg-blue-50 border border-blue-100 p-4 rounded-2xl">
-                <span class="block text-xs font-bold uppercase tracking-wider text-blue-700">Inversiones del Periodo</span>
-                <span id="total-inversiones" class="block text-xl font-extrabold text-blue-900 mt-1">0.00 €</span>
+            <div class="bg-blue-50 border border-blue-100 p-3.5 rounded-2xl">
+                <span class="block text-[10px] font-bold uppercase tracking-wider text-blue-700">Inversiones</span>
+                <span id="total-inversiones" class="block text-lg font-extrabold text-blue-900 mt-0.5">0.00 €</span>
             </div>
-            <div class="bg-amber-50 border border-amber-100 p-4 rounded-2xl">
-                <span class="block text-xs font-bold uppercase tracking-wider text-amber-700">Ahorro Asignado</span>
-                <span id="total-ahorro" class="block text-xl font-extrabold text-amber-900 mt-1">0.00 €</span>
+            <div class="bg-amber-50 border border-amber-100 p-3.5 rounded-2xl">
+                <span class="block text-[10px] font-bold uppercase tracking-wider text-amber-700">Ahorro</span>
+                <span id="total-ahorro" class="block text-lg font-extrabold text-amber-900 mt-0.5">0.00 €</span>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 bg-gray-50 border border-gray-100 p-5 rounded-2xl">
-            <div class="lg:col-span-1 space-y-3">
-                <h3 class="text-sm font-bold text-gray-800">Filtros Avanzados de Histórico</h3>
-                <div class="flex flex-col gap-2">
-                    <select id="chart-period" onchange="cargarDatos()" class="w-full px-3 py-2 bg-white border rounded-xl text-xs font-semibold shadow-sm focus:outline-none">
-                        <option value="todos">📊 Todo el Historial Registrado</option>
-                        <option value="mes">📅 Filtrar: Este Mes</option>
-                        <option value="semana">📆 Filtrar: Esta Semana</option>
-                    </select>
-                    <p class="text-xs text-gray-500 leading-relaxed">El gráfico circular porcentual se adapta inmediatamente calculando la proporcionalidad de tus gastos, huchas de ahorro e inversión frente a la masa total.</p>
-                </div>
+            <div class="lg:col-span-1 space-y-2">
+                <h3 class="text-sm font-bold text-gray-800">Filtros de Histórico</h3>
+                <select id="chart-period" onchange="cargarDatos()" class="w-full px-3 py-2 bg-white border rounded-xl text-xs font-semibold focus:outline-none">
+                    <option value="todos">📊 Todo el Historial</option>
+                    <option value="mes">📅 Este Mes</option>
+                    <option value="semana">📆 Esta Semana</option>
+                </select>
             </div>
-            <div class="lg:col-span-2 relative w-full flex items-center justify-center" style="height: 220px;">
+            <div class="lg:col-span-2 relative w-full flex items-center justify-center" style="height: 200px;">
                 <canvas id="analyticsChart"></canvas>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
             <div class="bg-gray-50 border border-gray-100 p-5 rounded-2xl h-fit space-y-4">
-                <h3 class="text-base font-bold text-gray-800">Registrar Nueva Operación</h3>
+                <h3 class="text-base font-bold text-gray-800">Nueva Operación</h3>
                 <form id="finance-form" class="space-y-3.5">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-500">Concepto / Descripción</label>
+                        <label class="block text-xs font-semibold text-gray-500">Concepto</label>
                         <input type="text" id="tx-desc" class="mt-1 block w-full px-3 py-2 bg-white border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-500">Importe Líquido (€)</label>
+                        <label class="block text-xs font-semibold text-gray-500">Importe (€)</label>
                         <input type="number" step="0.01" id="tx-amount" class="mt-1 block w-full px-3 py-2 bg-white border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="0.00" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-500">Tipo de Flujo Principal</label>
+                        <label class="block text-xs font-semibold text-gray-500">Tipo Principal</label>
                         <select id="tx-type" onchange="adaptarSubtipos()" class="mt-1 block w-full px-3 py-2 bg-white border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
                             <option value="ingreso">🟢 Ingreso</option>
                             <option value="gasto">🔴 Gasto</option>
@@ -139,34 +143,33 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-500">Clasificación / Subtipo</label>
-                        <select id="tx-subtipo" class="mt-1 block w-full px-3 py-2 bg-white border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                            </select>
+                        <label class="block text-xs font-semibold text-gray-500">Subtipo</label>
+                        <select id="tx-subtipo" class="mt-1 block w-full px-3 py-2 bg-white border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"></select>
                     </div>
-                    <button type="submit" class="w-full bg-slate-900 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-800 transition shadow-sm">Confirmar y Guardar</button>
+                    <button type="submit" class="w-full bg-slate-900 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-800 transition">Guardar Registro</button>
                 </form>
             </div>
 
             <div class="lg:col-span-2 space-y-4">
-                <div class="flex flex-wrap justify-between items-center gap-3 border-b border-gray-100 pb-2">
-                    <div class="flex gap-1.5 flex-wrap">
-                        <button onclick="cambiarFiltroTabla('todos')" class="tbl-filter active bg-slate-900 text-white px-3 py-1.5 rounded-xl text-xs font-medium transition">Todos</button>
-                        <button onclick="cambiarFiltroTabla('ingreso')" class="tbl-filter bg-gray-100 text-gray-600 px-3 py-1.5 rounded-xl text-xs font-medium transition">Ingresos</button>
-                        <button onclick="cambiarFiltroTabla('gasto')" class="tbl-filter bg-gray-100 text-gray-600 px-3 py-1.5 rounded-xl text-xs font-medium transition">Gastos</button>
-                        <button onclick="cambiarFiltroTabla('inversion')" class="tbl-filter bg-gray-100 text-gray-600 px-3 py-1.5 rounded-xl text-xs font-medium transition">Inversiones</button>
-                        <button onclick="cambiarFiltroTabla('ahorro')" class="tbl-filter bg-gray-100 text-gray-600 px-3 py-1.5 rounded-xl text-xs font-medium transition">Ahorro</button>
+                <div class="flex flex-wrap justify-between items-center gap-2 border-b border-gray-100 pb-2">
+                    <div class="flex gap-1 flex-wrap">
+                        <button onclick="cambiarFiltroTabla('todos')" class="tbl-filter active bg-slate-900 text-white px-2.5 py-1.5 rounded-xl text-xs font-medium transition">Todos</button>
+                        <button onclick="cambiarFiltroTabla('ingreso')" class="tbl-filter bg-gray-100 text-gray-600 px-2.5 py-1.5 rounded-xl text-xs font-medium transition">Ingresos</button>
+                        <button onclick="cambiarFiltroTabla('gasto')" class="tbl-filter bg-gray-100 text-gray-600 px-2.5 py-1.5 rounded-xl text-xs font-medium transition">Gastos</button>
+                        <button onclick="cambiarFiltroTabla('inversion')" class="tbl-filter bg-gray-100 text-gray-600 px-2.5 py-1.5 rounded-xl text-xs font-medium transition">Inversiones</button>
+                        <button onclick="cambiarFiltroTabla('ahorro')" class="tbl-filter bg-gray-100 text-gray-600 px-2.5 py-1.5 rounded-xl text-xs font-medium transition">Ahorro</button>
                     </div>
-                    <button onclick="exportarCSV()" class="bg-emerald-600 text-white hover:bg-emerald-700 px-3 py-1.5 rounded-xl text-xs font-semibold transition shadow-xs">📥 Exportar Data</button>
+                    <button onclick="exportarCSV()" class="bg-emerald-600 text-white hover:bg-emerald-700 px-2.5 py-1.5 rounded-xl text-xs font-semibold transition">📥 CSV</button>
                 </div>
 
                 <div class="overflow-x-auto border border-gray-100 rounded-xl">
                     <table class="min-w-full divide-y divide-gray-100 text-left text-sm">
                         <thead class="bg-gray-50 text-gray-500 text-xs font-bold uppercase">
                             <tr>
-                                <th class="px-4 py-3">Detalle</th>
-                                <th class="px-4 py-3">Categoría / Subtipo</th>
-                                <th class="px-4 py-3 text-right">Importe</th>
-                                <th class="px-4 py-3 text-center">Acción</th>
+                                <th class="px-3 py-2.5">Detalle</th>
+                                <th class="px-3 py-2.5">Subtipo</th>
+                                <th class="px-3 py-2.5 text-right">Importe</th>
+                                <th class="px-3 py-2.5 text-center">Acción</th>
                             </tr>
                         </thead>
                         <tbody id="finance-list" class="divide-y divide-gray-100 text-gray-600"></tbody>
@@ -205,9 +208,9 @@
             } else if (tipo === 'gasto') {
                 opciones = [{v: 'fijo', t: '🏠 Gasto Fijo / Facturas'}, {v: 'variable', t: '🍿 Ocio / Variables'}];
             } else if (tipo === 'inversion') {
-                opciones = [{v: 'inicio_mes_auto', t: '📈 Recurrente Automático (Inicio de Mes)'}, {v: 'oportunidad', t: '🪙 Inversión Ocasional / Bolsa'}];
+                opciones = [{v: 'inicio_mes_auto', t: '📈 Recurrente Mensual'}, {v: 'oportunidad', t: '🪙 Bolsa / Cripto'}];
             } else if (tipo === 'ahorro') {
-                opciones = [{v: 'fondo_emergencia', t: '🛡️ Fondo de Emergencia'}, {v: 'meta_futura', t: '🚀 Hucha / Metas'}];
+                opciones = [{v: 'fondo_emergencia', t: '🛡️ Fondo Emergencia'}, {v: 'meta_futura', t: '🚀 Hucha / Metas'}];
             }
 
             opciones.forEach(o => {
@@ -218,7 +221,6 @@
             });
         }
 
-        // CONTROL MULTIBANCO EN LOCALSTORAGE (Persistente y Directo)
         function cargarSaldosBancos() {
             document.getElementById('saldo-ibercaja').value = localStorage.getItem('bank_ibercaja') || '0.00';
             document.getElementById('saldo-openbank').value = localStorage.getItem('bank_openbank') || '0.00';
@@ -241,11 +243,9 @@
             const ib = parseFloat(document.getElementById('saldo-ibercaja').value) || 0;
             const op = parseFloat(document.getElementById('saldo-openbank').value) || 0;
             const tr = parseFloat(document.getElementById('saldo-trade').value) || 0;
-            const total = ib + op + tr;
-            document.getElementById('patrimonio-total-bancos').textContent = `${total.toFixed(2)} €`;
+            document.getElementById('patrimonio-total-bancos').textContent = `${(ib + op + tr).toFixed(2)} €`;
         }
 
-        // Login
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('username').value;
@@ -260,7 +260,7 @@
                 loginCard.classList.add('hidden');
                 dashboard.classList.remove('hidden');
                 
-                // CRÍTICO: Cargar configuraciones y datos una vez la pantalla es visible para evitar fallos de renderizado
+                // Cargar configuraciones críticas cuando el canvas ya es visible
                 cargarSaldosBancos();
                 cargarDatos();
             } else {
@@ -268,7 +268,6 @@
             }
         });
 
-        // BOTÓN CERRAR SESIÓN TOTALMENTE CORREGIDO
         logoutBtn.addEventListener('click', () => {
             dashboard.classList.add('hidden');
             loginCard.classList.remove('hidden');
@@ -278,7 +277,6 @@
             if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
         });
 
-        // Registrar Datos + ANIMACIÓN DE CELEBRACIÓN DE INGRESOS
         financeForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const tipoElegido = txType.value;
@@ -294,16 +292,14 @@
                 })
             });
             if (res.ok) {
-                // Si el tipo es Ingreso, lanzamos la animación festiva 🎉
                 if(tipoElegido === 'ingreso') {
                     confetti({
-                        particleCount: 120,
-                        spread: 70,
+                        particleCount: 130,
+                        spread: 75,
                         origin: { y: 0.6 },
-                        colors: ['#22c55e', '#4ade80', '#ffffff']
+                        colors: ['#22c55e', '#34d399', '#ffffff']
                     });
                 }
-                
                 financeForm.reset();
                 adaptarSubtipos();
                 cargarDatos();
@@ -365,7 +361,7 @@
             const filtrados = datos.filter(m => filtroTabla === 'todos' || m.tipo === filtroTabla);
 
             if(filtrados.length === 0) {
-                financeList.innerHTML = `<tr><td colspan="4" class="px-4 py-4 text-center text-gray-400 text-xs">Sin registros financieros</td></tr>`;
+                financeList.innerHTML = `<tr><td colspan="4" class="px-3 py-3 text-center text-gray-400 text-xs">Sin registros</td></tr>`;
                 return;
             }
 
@@ -378,18 +374,17 @@
                 if(m.tipo === 'ahorro') { cl = 'text-amber-600 font-semibold'; pfx = '🛡️'; }
 
                 fila.innerHTML = `
-                    <td class="px-4 py-3 font-medium text-gray-900">${m.descripcion}</td>
-                    <td class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-gray-400">${m.categoria}</td>
-                    <td class="px-4 py-3 text-right ${cl}">${pfx} ${m.amount_formatted || m.cantidad.toFixed(2)} €</td>
-                    <td class="px-4 py-3 text-center">
-                        <button onclick="eliminarRegistro(${m.id})" class="text-xs bg-red-50 hover:bg-red-100 text-red-600 font-medium px-2 py-1 rounded-lg transition">Eliminar</button>
+                    <td class="px-3 py-2.5 font-medium text-gray-900 text-xs sm:text-sm">${m.descripcion}</td>
+                    <td class="px-3 py-2.5 text-[10px] font-bold uppercase text-gray-400">${m.categoria}</td>
+                    <td class="px-3 py-2.5 text-right text-xs sm:text-sm ${cl}">${pfx} ${m.amount_formatted || m.cantidad.toFixed(2)} €</td>
+                    <td class="px-3 py-2.5 text-center">
+                        <button onclick="eliminarRegistro(${m.id})" class="text-[11px] bg-red-50 text-red-600 px-2 py-1 rounded-lg">Borrar</button>
                     </td>
                 `;
                 financeList.appendChild(fila);
             });
         }
 
-        // GRÁFICO SEGURO CORREGIDO (Solo inicializa si el dashboard es plenamente visible)
         function renderizarGraficoPorcentajes(datos) {
             let ingresos = 0, gastos = 0, inversiones = 0, ahorro = 0;
             datos.forEach(m => {
@@ -421,13 +416,13 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { position: 'right', labels: { font: { size: 11 }, boxWidth: 12 } } }
+                    plugins: { legend: { position: 'right', labels: { font: { size: 10 }, boxWidth: 10 } } }
                 }
             });
         }
 
         function exportarCSV() {
-            if(movimientosBase.length === 0) return alert("Sin información para exportar.");
+            if(movimientosBase.length === 0) return;
             let csv = "Concepto,Categoria_Subtipo,Tipo_Flujo,Importe_EUR,Fecha\n";
             movimientosBase.forEach(m => {
                 csv += `${m.descripcion.replace(/,/g, " ")},${m.categoria},${m.tipo},${m.cantidad},${m.fecha}\n`;
