@@ -75,15 +75,15 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800/60">
                     <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">🐖 Ibercaja</span>
-                    <input type="number" step="0.01" id="saldo-ibercaja" onchange="guardarSaldosBancos()" class="w-full bg-slate-950 px-3 py-1.5 rounded-lg text-sm font-black text-white border border-slate-800">
+                    <input type="number" step="0.01" id="saldo-ibercaja" oninput="guardarSaldosBancos()" class="w-full bg-slate-950 px-3 py-1.5 rounded-lg text-sm font-black text-white border border-slate-800">
                 </div>
                 <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800/60">
                     <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">💳 Openbank</span>
-                    <input type="number" step="0.01" id="saldo-openbank" onchange="guardarSaldosBancos()" class="w-full bg-slate-950 px-3 py-1.5 rounded-lg text-sm font-black text-white border border-slate-800">
+                    <input type="number" step="0.01" id="saldo-openbank" oninput="guardarSaldosBancos()" class="w-full bg-slate-950 px-3 py-1.5 rounded-lg text-sm font-black text-white border border-slate-800">
                 </div>
                 <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800/60">
                     <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">📈 Trade Republic</span>
-                    <input type="number" step="0.01" id="saldo-trade" onchange="guardarSaldosBancos()" class="w-full bg-slate-950 px-3 py-1.5 rounded-lg text-sm font-black text-white border border-slate-800">
+                    <input type="number" step="0.01" id="saldo-trade" oninput="guardarSaldosBancos()" class="w-full bg-slate-950 px-3 py-1.5 rounded-lg text-sm font-black text-white border border-slate-800">
                 </div>
             </div>
         </div>
@@ -93,7 +93,6 @@
                 <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">📈 Portafolio Indexado</h3>
                 <p class="text-[11px] text-slate-400">⚡ Haz clic para ver el historial analítico real e interactivo (1S hasta 5A)</p>
             </div>
-            
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 hover:border-emerald-500/40 transition-all cursor-pointer" onclick="abrirModalGrafica('MSCI World', 'MSCI')">
                     <div class="flex justify-between items-start">
@@ -106,7 +105,6 @@
                         <span id="msci-live-price" class="font-bold text-emerald-400 font-mono">Cargando...</span>
                     </div>
                 </div>
-
                 <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 hover:border-emerald-500/40 transition-all cursor-pointer" onclick="abrirModalGrafica('NASDAQ-100', 'NDAQ')">
                     <div class="flex justify-between items-start">
                         <span class="text-[11px] font-black text-emerald-400 uppercase tracking-wide">🇺🇸 NASDAQ-100 ↗</span>
@@ -118,7 +116,6 @@
                         <span id="ndx-live-price" class="font-bold text-emerald-400 font-mono">Cargando...</span>
                     </div>
                 </div>
-
                 <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 hover:border-emerald-500/40 transition-all cursor-pointer" onclick="abrirModalGrafica('Mercados Emergentes', 'EIMI')">
                     <div class="flex justify-between items-start">
                         <span class="text-[11px] font-black text-emerald-400 uppercase tracking-wide">🚀 Emergentes ↗</span>
@@ -130,7 +127,6 @@
                         <span id="em-live-price" class="font-bold text-emerald-400 font-mono">Cargando...</span>
                     </div>
                 </div>
-
                 <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 hover:border-blue-500/40 transition-all cursor-pointer" onclick="abrirModalGrafica('Ethereum (ETH)', 'ETH')">
                     <div class="flex justify-between items-start">
                         <span class="text-[11px] font-black text-blue-400 uppercase tracking-wide">🪙 Ethereum (ETH) ↗</span>
@@ -150,20 +146,17 @@
                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                     <div>
                         <h3 id="modal-asset-title" class="text-lg font-black text-white">Activo</h3>
-                        <p class="text-[11px] text-slate-400">🎯 Desplaza el cursor por la gráfica para auditar importes históricos</p>
+                        <p class="text-[11px] text-slate-400">🎯 Cursor interactivo sobre el histórico real</p>
                     </div>
                     <button onclick="cerrarModalGrafica()" class="bg-slate-950 hover:bg-red-500/20 text-slate-400 hover:text-red-400 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer">Cerrar</button>
                 </div>
-
                 <div class="flex flex-wrap gap-1 bg-slate-950 p-1 rounded-xl border border-slate-850 w-fit text-xs font-bold">
                     <button id="btn-p-1s" onclick="cambiarPeriodoHistorico('1s', 7)" class="px-3 py-1 rounded-lg text-slate-400 transition">1S</button>
                     <button id="btn-p-1m" onclick="cambiarPeriodoHistorico('1m', 30)" class="px-3 py-1 rounded-lg text-slate-400 transition">1M</button>
                     <button id="btn-p-6m" onclick="cambiarPeriodoHistorico('6m', 180)" class="px-3 py-1 rounded-lg text-slate-400 transition">6M</button>
                     <button id="btn-p-1a" onclick="cambiarPeriodoHistorico('1a', 365)" class="px-3 py-1 rounded-lg text-slate-400 transition">1A</button>
-                    <button id="btn-p-2a" onclick="cambiarPeriodoHistorico('2a', 730)" class="px-3 py-1 rounded-lg text-slate-400 transition">2A</button>
                     <button id="btn-p-5a" onclick="cambiarPeriodoHistorico('5a', 1825)" class="px-3 py-1 rounded-lg text-slate-400 transition">5A</button>
                 </div>
-
                 <div class="relative w-full bg-slate-950 rounded-xl p-2 border border-slate-850" style="height: 280px;">
                     <canvas id="modalRealtimeChart"></canvas>
                 </div>
@@ -238,11 +231,11 @@
 
             <div class="lg:col-span-2 space-y-4">
                 <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slate-800 pb-2">
-                    <div class="flex gap-1 flex-wrap">
-                        <button onclick="cambiarFiltroTabla('todos')" class="tbl-filter active bg-white text-slate-950 px-2.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer">Todos</button>
-                        <button onclick="cambiarFiltroTabla('ingreso')" class="tbl-filter bg-slate-950 text-slate-400 px-2.5 py-1.5 rounded-xl text-xs font-bold transition border border-slate-850 cursor-pointer">Ingresos</button>
-                        <button onclick="cambiarFiltroTabla('gasto')" class="tbl-filter bg-slate-950 text-slate-400 px-2.5 py-1.5 rounded-xl text-xs font-bold transition border border-slate-850 cursor-pointer">Gastos</button>
-                        <button onclick="cambiarFiltroTabla('inversion')" class="tbl-filter bg-slate-950 text-slate-400 px-2.5 py-1.5 rounded-xl text-xs font-bold transition border border-slate-850 cursor-pointer">Inversiones</button>
+                    <div class="flex gap-1 flex-wrap" id="filtros-container">
+                        <button onclick="cambiarFiltroTabla('todos', event)" class="tbl-filter bg-white text-slate-950 px-2.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer">Todos</button>
+                        <button onclick="cambiarFiltroTabla('ingreso', event)" class="tbl-filter bg-slate-950 text-slate-400 px-2.5 py-1.5 rounded-xl text-xs font-bold transition border border-slate-850 cursor-pointer">Ingresos</button>
+                        <button onclick="cambiarFiltroTabla('gasto', event)" class="tbl-filter bg-slate-950 text-slate-400 px-2.5 py-1.5 rounded-xl text-xs font-bold transition border border-slate-850 cursor-pointer">Gastos</button>
+                        <button onclick="cambiarFiltroTabla('inversion', event)" class="tbl-filter bg-slate-950 text-slate-400 px-2.5 py-1.5 rounded-xl text-xs font-bold transition border border-slate-850 cursor-pointer">Inversiones</button>
                     </div>
                     <button onclick="exportarCSV()" class="bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 px-3 py-1.5 rounded-xl text-xs font-bold transition border border-emerald-500/20 cursor-pointer">📥 Guardar CSV</button>
                 </div>
@@ -265,7 +258,7 @@
     </div>
 
     <script>
-        let usuarioSesionActiva = null; // Almacenamiento dinámico de sesión
+        let usuarioSesionActiva = null;
         let movimientosBase = [];
         let filtroTabla = 'todos';
         let chartInstance = null;
@@ -334,21 +327,20 @@
             const ctxModal = document.getElementById('modalRealtimeChart').getContext('2d');
             let etiquetas = [];
             let datosPrecios = [];
-            
             const monedaTarget = (activoSeleccionadoClave === 'ETH') ? 'EUR' : 'USD';
 
             try {
                 const res = await fetch(`https://min-api.cryptocompare.com/data/v2/histoday?fsym=${activoSeleccionadoClave}&tsym=${monedaTarget}&limit=${numDias}`);
                 if (res.ok) {
                     const rData = await res.json();
-                    const listaTicks = rData.Data.Data;
+                    const listaTicks = rData.Data.Data || [];
                     
                     listaTicks.forEach(tick => {
                         const dateObj = new Date(tick.time * 1000);
                         etiquetas.push(dateObj.toLocaleDateString('es-ES', {day: '2-digit', month: 'short'}));
-                        let precioFinal = tick.close;
+                        let precioFinal = tick.close || 0;
                         if(activoSeleccionadoClave === 'MSCI') precioFinal = tick.close * 2.85;
-                        if(activoSeleccionadoClave === 'NDAQ') precioFinal = tick.close * 1.15;
+                        if(activoSeleccionadoClave === 'NDAQ') precioFinal = tick.close * 98.10;
                         if(activoSeleccionadoClave === 'EIMI') precioFinal = tick.close * 1.25;
                         datosPrecios.push(precioFinal);
                     });
@@ -362,7 +354,7 @@
                 data: {
                     labels: etiquetas,
                     datasets: [{
-                        label: `Precio (${monedaTarget})`,
+                        label: `Precio`,
                         data: datosPrecios,
                         borderColor: activoSeleccionadoClave === 'ETH' ? '#60a5fa' : '#34d399',
                         backgroundColor: 'rgba(52,211,153,0.01)',
@@ -378,16 +370,7 @@
                     },
                     plugins: { 
                         legend: { display: false },
-                        tooltip: {
-                            enabled: true,
-                            backgroundColor: '#0f172a', titleColor: '#94a3b8', bodyColor: '#ffffff',
-                            borderColor: '#1e293b', borderWidth: 1, padding: 10, displayColors: false,
-                            callbacks: {
-                                label: function(context) {
-                                    return `Valor: ${context.parsed.y.toLocaleString('es-ES', {minimumFractionDigits: 2})} ${monedaTarget}`;
-                                }
-                            }
-                        }
+                        tooltip: { enabled: true }
                     }
                 }
             });
@@ -470,7 +453,6 @@
             });
         }
 
-        // Almacenamiento local de bancos separado por prefijo de usuario
         function cargarSaldosBancos() {
             const prefijo = `bank_${usuarioSesionActiva.username}_`;
             document.getElementById('saldo-ibercaja').value = localStorage.getItem(prefijo + 'ibercaja') || '0.00';
@@ -513,9 +495,7 @@
         });
 
         logoutBtn.addEventListener('click', () => {
-            localStorage.removeItem('quantum_session_active');
-            localStorage.removeItem('quantum_session_expire');
-            localStorage.removeItem('quantum_user_data');
+            localStorage.clear();
             usuarioSesionActiva = null;
             cerrarModalGrafica();
             dashboard.classList.add('hidden'); loginCard.classList.remove('hidden');
@@ -577,15 +557,15 @@
             document.getElementById('total-ahorro').textContent = `${a.toFixed(2)} €`;
         }
 
-        function cambiarFiltroTabla(tipo) {
+        function cambiarFiltroTabla(tipo, evento) {
             renovarseSesion(); filtroTabla = tipo;
             document.querySelectorAll('.tbl-filter').forEach(btn => {
                 btn.classList.remove('bg-white', 'text-slate-950');
                 btn.classList.add('bg-slate-950', 'text-slate-400');
             });
-            event.target.classList.remove('bg-slate-950', 'text-slate-400');
-            event.target.classList.add('bg-white', 'text-slate-950');
-            cargarDatos();
+            evento.target.classList.remove('bg-slate-950', 'text-slate-400');
+            evento.target.classList.add('bg-white', 'text-slate-950');
+            renderizarTabla(movimientosBase);
         }
 
         function renderizarTabla(datos) {
@@ -623,20 +603,22 @@
                 if (m.tipo === 'ahorro') a += m.cantidad;
             });
             const totalMasa = i + g + inv + a;
-            const pG = totalMasa > 0 ? ((g / totalMasa) * 100).toFixed(1) : 0;
-            const pI = totalMasa > 0 ? ((i / totalMasa) * 100).toFixed(1) : 0;
-            const pInv = totalMasa > 0 ? ((inv / totalMasa) * 100).toFixed(1) : 0;
-            const pA = totalMasa > 0 ? ((a / totalMasa) * 100).toFixed(1) : 0;
 
             const ctx = document.getElementById('analyticsChart').getContext('2d');
             if (chartInstance) chartInstance.destroy();
+
+            // Si no hay datos, graficamos una estructura base gris neutral
+            const valores = totalMasa === 0 ? [1] : [g, i, inv, a];
+            const colores = totalMasa === 0 ? ['#1e293b'] : ['#f87171', '#34d399', '#60a5fa', '#fbbf24'];
+            const etiquetas = totalMasa === 0 ? ['Sin movimientos'] : ['Gastos', 'Ingresos', 'Inversiones', 'Ahorros'];
+
             chartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: [`Gastos (${pG}%)`, `Ingresos (${pI}%)`, `Inversiones (${pInv}%)`, `Ahorros (${pA}%)`],
+                    labels: etiquetas,
                     datasets: [{
-                        data: [g, i, inv, a],
-                        backgroundColor: ['#f87171', '#34d399', '#60a5fa', '#fbbf24'],
+                        data: valores,
+                        backgroundColor: colores,
                         borderColor: '#0f172a', borderWidth: 2
                     }]
                 },
@@ -645,7 +627,7 @@
         }
 
         function exportarCSV() {
-            if(movimientosBase.length === 0) return;
+            if(movimientosBase.length === 0) { alert("No hay movimientos que exportar."); return; }
             let csv = "Fecha,Concepto,Categoria,Tipo,Importe\n";
             movimientosBase.forEach(m => { csv += `${m.fecha},${m.descripcion},${m.categoria},${m.tipo},${m.cantidad}\n`; });
             const link = document.createElement("a");
