@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finanzas 360 Avanzado</title>
+    <title>Finanzas 360 Ultimate</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -12,19 +12,19 @@
     <div id="login-card" class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
         <div class="text-center mb-6">
             <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Finanzas 360</h2>
-            <p class="text-sm text-gray-500 mt-1">Control integral y permanente de tu capital</p>
+            <p class="text-sm text-gray-500 mt-1">Control integral, analíticas y ahorro inteligente</p>
         </div>
         <form id="login-form" class="space-y-4">
             <div>
                 <label class="block text-xs font-semibold uppercase text-gray-600 tracking-wider">Usuario</label>
-                <input type="text" id="username" class="mt-1 block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition" required>
+                <input type="text" id="username" class="mt-1 block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition" required>
             </div>
             <div>
                 <label class="block text-xs font-semibold uppercase text-gray-600 tracking-wider">Contraseña</label>
-                <input type="password" id="password" class="mt-1 block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition" required>
+                <input type="password" id="password" class="mt-1 block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition" required>
             </div>
             <p id="login-error" class="text-red-500 text-xs hidden font-medium">⚠️ Credenciales incorrectas</p>
-            <button type="submit" class="w-full bg-slate-900 text-white py-3 rounded-xl font-medium hover:bg-slate-800 shadow-md transition duration-200">Entrar al Panel</button>
+            <button type="submit" class="w-full bg-slate-900 text-white py-3 rounded-xl font-medium hover:bg-slate-800 shadow-md transition duration-200">Acceder al Sistema</button>
         </form>
     </div>
 
@@ -32,99 +32,99 @@
         
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-100 pb-4">
             <div>
-                <h1 class="text-2xl font-bold tracking-tight text-gray-900">Dashboard Financiero Avanzado</h1>
-                <p class="text-xs text-gray-400">Nube activa con PostgreSQL y Analíticas</p>
+                <h1 class="text-2xl font-bold tracking-tight text-gray-900">Ecosistema Financiero Personal</h1>
+                <p class="text-xs text-gray-400">Sincronización en la Nube Permanente Activa</p>
             </div>
             <button id="logout-btn" class="bg-gray-100 text-gray-600 px-4 py-2 rounded-xl text-xs font-semibold hover:bg-red-50 hover:text-red-600 transition">Cerrar Sesión</button>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="bg-green-50 border border-green-100 p-5 rounded-2xl">
-                <span class="block text-xs font-bold uppercase tracking-wider text-green-700">Total Ingresos</span>
-                <span id="total-ingresos" class="block text-2xl font-extrabold text-green-900 mt-1">0.00 €</span>
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div class="bg-green-50 border border-green-100 p-4 rounded-2xl">
+                <span class="block text-xs font-bold uppercase tracking-wider text-green-700">Ingresos Totales</span>
+                <span id="total-ingresos" class="block text-xl font-extrabold text-green-900 mt-1">0.00 €</span>
             </div>
-            <div class="bg-red-50 border border-red-100 p-5 rounded-2xl">
-                <span class="block text-xs font-bold uppercase tracking-wider text-red-700">Total Gastos</span>
-                <span id="total-gastos" class="block text-2xl font-extrabold text-red-900 mt-1">0.00 €</span>
+            <div class="bg-red-50 border border-red-100 p-4 rounded-2xl">
+                <span class="block text-xs font-bold uppercase tracking-wider text-red-700">Gastos Totales</span>
+                <span id="total-gastos" class="block text-xl font-extrabold text-red-900 mt-1">0.00 €</span>
             </div>
-            <div class="bg-blue-50 border border-blue-100 p-5 rounded-2xl">
-                <span class="block text-xs font-bold uppercase tracking-wider text-blue-700">Total Inversiones</span>
-                <span id="total-inversiones" class="block text-2xl font-extrabold text-blue-900 mt-1">0.00 €</span>
+            <div class="bg-blue-50 border border-blue-100 p-4 rounded-2xl">
+                <span class="block text-xs font-bold uppercase tracking-wider text-blue-700">Inversiones Acumuladas</span>
+                <span id="total-inversiones" class="block text-xl font-extrabold text-blue-900 mt-1">0.00 €</span>
+            </div>
+            <div class="bg-amber-50 border border-amber-100 p-4 rounded-2xl">
+                <span class="block text-xs font-bold uppercase tracking-wider text-amber-700">Capital Destinado a Ahorro</span>
+                <span id="total-ahorro" class="block text-xl font-extrabold text-amber-900 mt-1">0.00 €</span>
             </div>
         </div>
 
-        <div class="bg-gray-50 border border-gray-100 p-5 rounded-2xl space-y-4">
-            <div class="flex justify-between items-center flex-wrap gap-2">
-                <h3 class="text-base font-bold text-gray-800">Análisis y Distribución Visual</h3>
-                <select id="chart-period" onchange="actualizarGrafico()" class="px-3 py-1.5 bg-white border rounded-xl text-xs font-semibold shadow-sm focus:outline-none">
-                    <option value="mes">📅 Este Mes</option>
-                    <option value="semana">📆 Esta Semana</option>
-                    <option value="todos">📊 Todo el Historial</option>
-                </select>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 bg-gray-50 border border-gray-100 p-5 rounded-2xl">
+            <div class="lg:col-span-1 space-y-3">
+                <h3 class="text-sm font-bold text-gray-800">Filtros Avanzados de Histórico</h3>
+                <div class="flex flex-col gap-2">
+                    <select id="chart-period" onchange="cargarDatos()" class="w-full px-3 py-2 bg-white border rounded-xl text-xs font-semibold shadow-sm focus:outline-none">
+                        <option value="todos">📊 Todo el Historial Registrado</option>
+                        <option value="mes">📅 Filtrar: Este Mes</option>
+                        <option value="semana">📆 Filtrar: Esta Semana</option>
+                    </select>
+                    <p class="text-xs text-gray-500 leading-relaxed">El gráfico de la derecha muestra dinámicamente la tasa proporcional del capital, aislando el impacto de tus gastos e inversiones fijas.</p>
+                </div>
             </div>
-            <div class="relative w-full max-w-md mx-auto" style="height: 260px;">
+            <div class="lg:col-span-2 relative w-full flex items-center justify-center" style="height: 220px;">
                 <canvas id="analyticsChart"></canvas>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <div class="bg-gray-50 border border-gray-100 p-5 rounded-2xl h-fit">
-                <h3 class="text-base font-bold text-gray-800 mb-4">Registrar Movimiento</h3>
-                <form id="finance-form" class="space-y-4">
+            <div class="bg-gray-50 border border-gray-100 p-5 rounded-2xl h-fit space-y-4">
+                <h3 class="text-base font-bold text-gray-800">Registrar Nueva Operación</h3>
+                <form id="finance-form" class="space-y-3.5">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-500">Descripción</label>
-                        <input type="text" id="tx-desc" class="mt-1 block w-full px-3 py-2 bg-white border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ej. Compra, Nómina..." required>
+                        <label class="block text-xs font-semibold text-gray-500">Concepto / Descripción</label>
+                        <input type="text" id="tx-desc" class="mt-1 block w-full px-3 py-2 bg-white border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-500">Importe (€)</label>
-                        <input type="number" step="0.01" id="tx-amount" class="mt-1 block w-full px-3 py-2 bg-white border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="0.00" required>
+                        <label class="block text-xs font-semibold text-gray-500">Importe Líquido (€)</label>
+                        <input type="number" step="0.01" id="tx-amount" class="mt-1 block w-full px-3 py-2 bg-white border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="0.00" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-500">Tipo de Transacción</label>
-                        <select id="tx-type" class="mt-1 block w-full px-3 py-2 bg-white border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label class="block text-xs font-semibold text-gray-500">Tipo de Flujo Principal</label>
+                        <select id="tx-type" onchange="adaptarSubtipos()" class="mt-1 block w-full px-3 py-2 bg-white border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
                             <option value="ingreso">🟢 Ingreso</option>
                             <option value="gasto">🔴 Gasto</option>
                             <option value="inversion">🔵 Inversión</option>
+                            <option value="ahorro">📦 Ahorro Mensual</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-500">Categoría</label>
-                        <select id="tx-category" class="mt-1 block w-full px-3 py-2 bg-white border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="sueldo">💼 Sueldo / Ingresos</option>
-                            <option value="ocio">🍿 Ocio y Restauración</option>
-                            <option value="vivienda">🏠 Vivienda y Facturas</option>
-                            <option value="inversion-bolsa">📈 Bolsa / Fondos</option>
-                            <option value="inversion-crypto">🪙 Criptomonedas</option>
-                            <option value="otros">📦 Otros</option>
-                        </select>
+                        <label class="block text-xs font-semibold text-gray-500">Clasificación / Subtipo</label>
+                        <select id="tx-subtipo" class="mt-1 block w-full px-3 py-2 bg-white border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            </select>
                     </div>
-                    <button type="submit" class="w-full bg-slate-900 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-800 transition">Añadir a Finanzas</button>
+                    <button type="submit" class="w-full bg-slate-900 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-800 transition shadow-sm">Confirmar y Guardar</button>
                 </form>
             </div>
 
             <div class="lg:col-span-2 space-y-4">
-                
-                <div class="flex flex-wrap justify-between items-center gap-4 border-b border-gray-100 pb-3">
-                    <div class="flex flex-wrap gap-1.5">
-                        <button onclick="filtrarMovimientos('todos')" class="filter-btn active bg-slate-900 text-white px-3.5 py-1.5 rounded-xl text-xs font-medium transition">Todos</button>
-                        <button onclick="filtrarMovimientos('ingreso')" class="filter-btn bg-gray-100 text-gray-600 hover:bg-green-100 hover:text-green-700 px-3.5 py-1.5 rounded-xl text-xs font-medium transition">Ingresos</button>
-                        <button onclick="filtrarMovimientos('gasto')" class="filter-btn bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-700 px-3.5 py-1.5 rounded-xl text-xs font-medium transition">Gastos</button>
-                        <button onclick="filtrarMovimientos('inversion')" class="filter-btn bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-700 px-3.5 py-1.5 rounded-xl text-xs font-medium transition">Inversiones</button>
+                <div class="flex flex-wrap justify-between items-center gap-3 border-b border-gray-100 pb-2">
+                    <div class="flex gap-1.5 flex-wrap">
+                        <button onclick="cambiarFiltroTabla('todos')" class="tbl-filter active bg-slate-900 text-white px-3 py-1.5 rounded-xl text-xs font-medium transition">Todos</button>
+                        <button onclick="cambiarFiltroTabla('ingreso')" class="tbl-filter bg-gray-100 text-gray-600 px-3 py-1.5 rounded-xl text-xs font-medium transition">Ingresos</button>
+                        <button onclick="cambiarFiltroTabla('gasto')" class="tbl-filter bg-gray-100 text-gray-600 px-3 py-1.5 rounded-xl text-xs font-medium transition">Gastos</button>
+                        <button onclick="cambiarFiltroTabla('inversion')" class="tbl-filter bg-gray-100 text-gray-600 px-3 py-1.5 rounded-xl text-xs font-medium transition">Inversiones</button>
+                        <button onclick="cambiarFiltroTabla('ahorro')" class="tbl-filter bg-gray-100 text-gray-600 px-3 py-1.5 rounded-xl text-xs font-medium transition">Ahorro</button>
                     </div>
-                    
-                    <button onclick="exportarCSV()" class="bg-emerald-600 text-white hover:bg-emerald-700 px-3 py-1.5 rounded-xl text-xs font-semibold shadow-sm transition flex items-center gap-1">
-                        📥 Exportar Tabla (.CSV)
-                    </button>
+                    <button onclick="exportarCSV()" class="bg-emerald-600 text-white hover:bg-emerald-700 px-3 py-1.5 rounded-xl text-xs font-semibold transition shadow-xs">📥 Exportar Data</button>
                 </div>
 
                 <div class="overflow-x-auto border border-gray-100 rounded-xl">
                     <table class="min-w-full divide-y divide-gray-100 text-left text-sm">
                         <thead class="bg-gray-50 text-gray-500 text-xs font-bold uppercase">
                             <tr>
-                                <th class="px-4 py-3">Concepto</th>
-                                <th class="px-4 py-3">Categoría</th>
-                                <th class="px-4 py-3 text-right">Cantidad</th>
+                                <th class="px-4 py-3">Detalle</th>
+                                <th class="px-4 py-3">Categoría / Subtipo</th>
+                                <th class="px-4 py-3 text-right">Importe</th>
+                                <th class="px-4 py-3 text-center">Acción</th>
                             </tr>
                         </thead>
                         <tbody id="finance-list" class="divide-y divide-gray-100 text-gray-600"></tbody>
@@ -136,22 +136,45 @@
     </div>
 
     <script>
-        let todosLosMovimientos = [];
-        let filtroActual = 'todos';
-        let miGrafico = null; // Instancia global de Chart.js
+        let movimientosBase = [];
+        let filtroTabla = 'todos';
+        let chartInstance = null;
 
         const loginCard = document.getElementById('login-card');
         const loginForm = document.getElementById('login-form');
         const loginError = document.getElementById('login-error');
         const dashboard = document.getElementById('dashboard');
-        const logoutBtn = document.getElementById('logout-btn');
         
         const financeForm = document.getElementById('finance-form');
         const txDesc = document.getElementById('tx-desc');
         const txAmount = document.getElementById('tx-amount');
         const txType = document.getElementById('tx-type');
-        const txCategory = document.getElementById('tx-category');
+        const txSubtipo = document.getElementById('tx-subtipo');
         const financeList = document.getElementById('finance-list');
+
+        // Adaptación automática y limpia de subtipos solicitados
+        function adaptarSubtipos() {
+            const tipo = txType.value;
+            txSubtipo.innerHTML = '';
+            
+            let opciones = [];
+            if (tipo === 'ingreso') {
+                opciones = [{v: 'fijo', t: '💼 Ingreso Fijo (Nómina/Renta)'}, {v: 'variable', t: '📦 Otros Ingresos'}];
+            } else if (tipo === 'gasto') {
+                opciones = [{v: 'fijo', t: '🏠 Gasto Fijo / Facturas'}, {v: 'variable', t: '🍿 Ocio / Variables'}];
+            } else if (tipo === 'inversion') {
+                opciones = [{v: 'inicio_mes_auto', t: '📈 Recurrente Automático (Inicio de Mes)'}, {v: 'oportunidad', t: '🪙 Inversión Oporuntuna / Bolsa'}];
+            } else if (tipo === 'ahorro') {
+                opciones = [{v: 'fondo_emergencia', t: '🛡️ Fondo de Emergencia'}, {v: 'meta_futura', t: '🚀 Hucha / Metas'}];
+            }
+
+            opciones.forEach(o => {
+                const opt = document.createElement('option');
+                opt.value = o.v;
+                opt.textContent = o.t;
+                txSubtipo.appendChild(opt);
+            });
+        }
 
         // Login
         loginForm.addEventListener('submit', async (e) => {
@@ -164,9 +187,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
             });
-            const data = await res.json();
-
-            if (res.ok && data.success) {
+            if (res.ok) {
                 loginCard.classList.add('hidden');
                 dashboard.classList.remove('hidden');
                 cargarDatos();
@@ -175,13 +196,7 @@
             }
         });
 
-        logoutBtn.addEventListener('click', () => {
-            dashboard.classList.add('hidden');
-            loginCard.classList.remove('hidden');
-            loginForm.reset();
-        });
-
-        // Guardar Datos
+        // Registrar Datos
         financeForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const res = await fetch('/api/movimientos', {
@@ -191,7 +206,7 @@
                     descripcion: txDesc.value,
                     cantidad: parseFloat(txAmount.value),
                     tipo: txType.value,
-                    categoria: txCategory.value
+                    categoria: txSubtipo.value
                 })
             });
             if (res.ok) {
@@ -200,143 +215,146 @@
             }
         });
 
-        // Cargar Base de Datos
-        async function cargarDatos() {
-            const res = await fetch('/api/movimientos');
-            todosLosMovimientos = await res.json();
-            calcularResumenes();
-            renderizarTabla();
-            actualizarGrafico(); // Refrescar gráficos al cambiar datos
+        // FUNCIONALIDAD NUEVA: BORRADO FÍSICO EN CALIENTE DESDE LA WEB
+        async function eliminarRegistro(id) {
+            if(!confirm("¿Deseas eliminar este registro de forma permanente de la base de datos?")) return;
+            
+            const res = await fetch(`/api/movimientos/${id}`, { method: 'DELETE' });
+            if(res.ok) {
+                cargarDatos();
+            } else {
+                alert("Error al intentar procesar el borrado remoto.");
+            }
         }
 
-        function calcularResumenes() {
-            let ingresos = 0, gastos = 0, inversiones = 0;
-            todosLosMovimientos.forEach(m => {
+        // Cargar Datos
+        async function cargarDatos() {
+            const res = await fetch('/api/movimientos');
+            movimientosBase = await res.json();
+            
+            // Lógica de filtrado por periodo
+            const periodo = document.getElementById('chart-period').value;
+            const ahora = new Date();
+            
+            const filtradosPorPeriodo = movimientosBase.filter(m => {
+                if (periodo === 'todos') return true;
+                const fMov = new Date(m.fecha);
+                const diffDias = (ahora - fMov) / (1000 * 60 * 60 * 24);
+                return periodo === 'semana' ? diffDias <= 7 : diffDias <= 30;
+            });
+
+            calcularResumenes(filtradosPorPeriodo);
+            renderizarTabla(filtradosPorPeriodo);
+            renderizarGraficoPorcentajes(filtradosPorPeriodo);
+        }
+
+        function calcularResumenes(datos) {
+            let ingresos = 0, gastos = 0, inversiones = 0, ahorro = 0;
+            datos.forEach(m => {
                 if (m.tipo === 'ingreso') ingresos += m.cantidad;
                 if (m.tipo === 'gasto') gastos += m.cantidad;
                 if (m.tipo === 'inversion') inversiones += m.cantidad;
+                if (m.tipo === 'ahorro') ahorro += m.cantidad;
             });
             document.getElementById('total-ingresos').textContent = `${ingresos.toFixed(2)} €`;
             document.getElementById('total-gastos').textContent = `${gastos.toFixed(2)} €`;
             document.getElementById('total-inversiones').textContent = `${inversiones.toFixed(2)} €`;
+            document.getElementById('total-ahorro').textContent = `${ahorro.toFixed(2)} €`;
         }
 
-        function filtrarMovimientos(tipo) {
-            filtroActual = tipo;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
+        function cambiarFiltroTabla(tipo) {
+            filtroTabla = tipo;
+            document.querySelectorAll('.tbl-filter').forEach(btn => {
                 btn.classList.remove('bg-slate-900', 'text-white', 'active');
                 btn.classList.add('bg-gray-100', 'text-gray-600');
             });
             event.target.classList.remove('bg-gray-100', 'text-gray-600');
             event.target.classList.add('bg-slate-900', 'text-white', 'active');
-            renderizarTabla();
+            cargarDatos();
         }
 
-        function renderizarTabla() {
+        function renderizarTabla(datos) {
             financeList.innerHTML = '';
-            const filtrados = todosLosMovimientos.filter(m => filtroActual === 'todos' || m.tipo === filtroActual);
+            const filtrados = datos.filter(m => filtroTabla === 'todos' || m.tipo === filtroTabla);
 
             if(filtrados.length === 0) {
-                financeList.innerHTML = `<tr><td colspan="3" class="px-4 py-4 text-center text-gray-400 text-xs">Sin registros</td></tr>`;
+                financeList.innerHTML = `<tr><td colspan="4" class="px-4 py-4 text-center text-gray-400 text-xs">Sin registros financieros</td></tr>`;
                 return;
             }
 
             filtrados.forEach(m => {
                 const fila = document.createElement('tr');
-                let colorClase = 'text-green-600 font-semibold';
-                let prefijo = '+';
-                if (m.tipo === 'gasto') { colorClase = 'text-red-600 font-semibold'; prefijo = '-'; }
-                if (m.tipo === 'inversion') { colorClase = 'text-blue-600 font-semibold'; prefijo = '⚙️'; }
+                let cl = 'text-green-600 font-semibold';
+                let pfx = '+';
+                if(m.tipo === 'gasto') { cl = 'text-red-600 font-semibold'; pfx = '-'; }
+                if(m.tipo === 'inversion') { cl = 'text-blue-600 font-semibold'; pfx = '📈'; }
+                if(m.tipo === 'ahorro') { cl = 'text-amber-600 font-semibold'; pfx = '🛡️'; }
 
                 fila.innerHTML = `
                     <td class="px-4 py-3 font-medium text-gray-900">${m.descripcion}</td>
-                    <td class="px-4 py-3 text-xs uppercase font-bold tracking-wider text-gray-400">${m.categoria}</td>
-                    <td class="px-4 py-3 text-right ${colorClase}">${prefijo} ${m.cantidad.toFixed(2)} €</td>
+                    <td class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-gray-400">${m.categoria}</td>
+                    <td class="px-4 py-3 text-right ${cl}">${pfx} ${m.amount_formatted || m.cantidad.toFixed(2)} €</td>
+                    <td class="px-4 py-3 text-center">
+                        <button onclick="eliminarRegistro(${m.id})" class="text-xs bg-red-50 hover:bg-red-100 text-red-600 font-medium px-2 py-1 rounded-lg transition">Eliminar</button>
+                    </td>
                 `;
                 financeList.appendChild(fila);
             });
         }
 
-        // --- SISTEMA DINÁMICO DE GRÁFICOS (Chart.js) ---
-        function actualizarGrafico() {
-            const periodo = document.getElementById('chart-period').value;
-            const ahora = new Date();
-            
-            // Filtrar movimientos basándose en la fecha (Semana / Mes / Todos)
-            const movimientosFiltrados = todosLosMovimientos.filter(m => {
-                if (periodo === 'todos') return true;
-                const fechaMovimiento = new Date(m.fecha);
-                const diferenciaTiempo = ahora - fechaMovimiento;
-                const diferenciaDias = diferenciaTiempo / (1000 * 60 * 60 * 24);
-                
-                if (periodo === 'semana') return diferenciaDias <= 7;
-                if (periodo === 'mes') return diferenciaDias <= 30;
-                return true;
-            });
-
-            // Agrupar totales
-            let ingresos = 0, gastos = 0, inversiones = 0;
-            movimientosFiltrados.forEach(m => {
+        // SISTEMA DE GRÁFICO PORCENTUAL INTEGRADO (Chart.js)
+        function renderizarGraficoPorcentajes(datos) {
+            let ingresos = 0, gastos = 0, inversiones = 0, ahorro = 0;
+            datos.forEach(m => {
                 if (m.tipo === 'ingreso') ingresos += m.cantidad;
                 if (m.tipo === 'gasto') gastos += m.cantidad;
                 if (m.tipo === 'inversion') inversiones += m.cantidad;
+                if (m.tipo === 'ahorro') ahorro += m.cantidad;
             });
 
+            const totalMasa = ingresos + gastos + inversiones + ahorro;
+            const pGastos = totalMasa > 0 ? ((gastos / totalMasa) * 100).toFixed(1) : 0;
+            const pIngresos = totalMasa > 0 ? ((ingresos / totalMasa) * 100).toFixed(1) : 0;
+            const pInversiones = totalMasa > 0 ? ((inversiones / totalMasa) * 100).toFixed(1) : 0;
+            const pAhorros = totalMasa > 0 ? ((ahorro / totalMasa) * 100).toFixed(1) : 0;
+
             const ctx = document.getElementById('analyticsChart').getContext('2d');
+            if (chartInstance) { chartInstance.destroy(); }
 
-            // Destruir gráfico previo si ya existía para evitar solapamientos visuales
-            if (miGrafico) { miGrafico.destroy(); }
-
-            // Generar nuevo gráfico circular
-            miGrafico = new Chart(ctx, {
+            chartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Ingresos (€)', 'Gastos (€)', 'Inversiones (€)'],
+                    labels: [`Gastos (${pGastos}%)`, `Ingresos (${pIngresos}%)`, `Inversiones (${pInversiones}%)`, `Ahorro (${pAhorros}%)`],
                     datasets: [{
-                        data: [ingresos, gastos, inversiones],
-                        backgroundColor: ['#22c55e', '#ef4444', '#3b82f6'],
-                        borderWidth: 2
+                        data: [gastos, ingresos, inversiones, ahorro],
+                        backgroundColor: ['#ef4444', '#22c55e', '#3b82f6', '#f59e0b'],
+                        borderWidth: 1.5
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
-                    }
+                    plugins: { legend: { position: 'right', labels: { font: { size: 11 }, boxWidth: 12 } } }
                 }
             });
         }
 
-        // --- FUNCIÓN DE EXPORTACIÓN A CSV ---
         function exportarCSV() {
-            if (todosLosMovimientos.length === 0) {
-                alert("No hay datos para exportar.");
-                return;
-            }
-
-            // Encabezados del archivo Excel / CSV
-            let contenidoCsv = "Concepto,Categoria,Tipo,Cantidad (EUR),Fecha\n";
-            
-            todosLosMovimientos.forEach(m => {
-                // Reemplazamos comas en la descripción para evitar romper las celdas del CSV
-                const descSegura = m.descripcion.replace(/,/g, " ");
-                contenidoCsv += `${descSegura},${m.categoria},${m.tipo},${m.cantidad},${m.fecha}\n`;
+            if(movimientosBase.length === 0) return alert("Sin información para exportar.");
+            let csv = "Concepto,Categoria_Subtipo,Tipo_Flujo,Importe_EUR,Fecha\n";
+            movimientosBase.forEach(m => {
+                csv += `${m.descripcion.replace(/,/g, " ")},${m.categoria},${m.tipo},${m.cantidad},${m.fecha}\n`;
             });
-
-            // Crear el enlace oculto de descarga en el navegador
-            const blob = new Blob([contenidoCsv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
-            const url = URL.createObjectURL(blob);
-            
-            link.setAttribute("href", url);
-            link.setAttribute("download", `Reporte_Finanzas_${new Date().toISOString().slice(0,10)}.csv`);
-            link.style.visibility = 'hidden';
-            
+            link.setAttribute("href", URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })));
+            link.setAttribute("download", "Historial_Finanzas_360.csv");
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         }
+
+        // Inicializar vistas de inputs
+        document.addEventListener("DOMContentLoaded", () => adaptarSubtipos());
     </script>
 </body>
 </html>
