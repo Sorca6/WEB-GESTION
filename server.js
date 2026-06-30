@@ -3,7 +3,7 @@ const { Pool } = require('pg');
 const path = require('path');
 
 const app = express();
-// Puerto adaptado para producción (Render) y entorno local (3000)
+// Puerto dinámico para producción (Render) y entorno local (3000)
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
@@ -18,7 +18,7 @@ const pool = new Pool({
 // Inicialización automática de las tablas en la nube
 const initDB = async () => {
     try {
-        // 1. Tabla de Usuarios
+        // 1. Crear Tabla de Usuarios
         await pool.query(`
             CREATE TABLE IF NOT EXISTS usuarios (
                 id SERIAL PRIMARY KEY,
@@ -27,11 +27,18 @@ const initDB = async () => {
             )
         `);
 
-        // Insertar usuario administrador predeterminado si la tabla está vacía
-        const userCheck = await pool.query("SELECT COUNT(*) FROM usuarios");
+        // Leer credenciales desde las Variables de Entorno Seguras de Render
+        // Si por algún motivo no existieran, usará 'admin' y '1234' por defecto en tu PC local
+        const defaultUser = process.env.ADMIN_USER || 'admin';
+        const defaultPass = process.env.ADMIN_PASS || '1234';
+
+        // Comprobamos si ya existe el usuario secreto en la base de datos
+        const userCheck = await pool.query("SELECT COUNT(*) FROM usuarios WHERE username = $1", [defaultUser]);
+        
         if (parseInt(userCheck.rows[0].count) === 0) {
-            await pool.query("INSERT INTO usuarios (username, password) VALUES ('admin', '1234')");
-            console.log('-> Usuario base (admin/1234) creado correctamente.');
+            // Si no existe, lo insertamos de manera privada
+            await pool.query("INSERT INTO usuarios (username, password) VALUES ($1, $2)", [defaultUser, defaultPass]);
+            console.log('-> Usuario administrador personalizado configurado de forma segura.');
         }
 
         // 2. Tabla de Movimientos Financieros (Ingresos, Gastos, Inversiones)
@@ -45,7 +52,7 @@ const initDB = async () => {
                 fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);
-        console.log('-> Estructura PostgreSQL verificada y lista para operar.');
+        console.log('-> Estructura PostgreSQL verificada y lista para operar de forma segura.');
     } catch (err) {
         console.error('Error crítico inicializando la base de datos:', err.message);
     }
@@ -106,5 +113,5 @@ app.post('/api/movimientos', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Servidor activo en http://localhost:${PORT}`);
+    console.log(`Servidor activo en el puerto ${PORT}`);
 });
