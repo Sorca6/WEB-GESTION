@@ -14,7 +14,6 @@ const pool = new Pool({
     ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
 });
 
-// Inicialización de PostgreSQL
 const initDB = async () => {
     try {
         await pool.query(`CREATE TABLE IF NOT EXISTS usuarios (id SERIAL PRIMARY KEY, username TEXT UNIQUE, password TEXT)`);
@@ -30,21 +29,19 @@ const initDB = async () => {
 };
 initDB();
 
-// 🤖 MÓDULO: "EL VIGILANTE" DE BOT DE TELEGRAM
-// Configura tus umbrales de alerta (puedes cambiarlos por los límites que tú desees)
-const UMBRAL_ALERTA_ETH_BAJO = 2900.00; // Alerta si ETH baja de 2900€
-let ultimaAlertaEnviada = 0; // Evita spam en tu móvil
+// 🤖 VIGILANTE AUTOMÁTICO DE TELEGRAM
+const UMBRAL_ALERTA_ETH_BAJO = 2000.00; // Umbral de aviso ajustado
+let ultimaAlertaEnviada = 0;
 
 const enviarMensajeTelegram = (texto) => {
     const token = process.env.TELEGRAM_BOT_TOKEN;
     const chatId = process.env.TELEGRAM_CHAT_ID;
-    if (!token || !chatId) return; // Si no están configurados en Render, el bot permanece latente sin fallar
+    if (!token || !chatId) return;
 
     const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(texto)}`;
-    https.get(url, (res) => {}).on('error', (e) => console.error("Error enviando Telegram:", e.message));
+    https.get(url, (res) => {}).on('error', (e) => console.error("Error Telegram:", e.message));
 };
 
-// Ejecución repetitiva en segundo plano para vigilar precios cada 1 hora (3600000 ms)
 setInterval(() => {
     https.get('https://api.binance.com/api/v3/ticker/price?symbol=ETHEUR', (res) => {
         let data = '';
@@ -53,10 +50,8 @@ setInterval(() => {
             try {
                 const precioETH = parseFloat(JSON.parse(data).price);
                 const ahora = Date.now();
-                
-                // Si el mercado cae por debajo de tu umbral y han pasado más de 6 horas desde el último aviso
                 if (precioETH < UMBRAL_ALERTA_ETH_BAJO && (ahora - ultimaAlertaEnviada > 6 * 60 * 60 * 1000)) {
-                    enviarMensajeTelegram(`⚠️ ¡ALERTA QUANTUM! Ethereum (ETH) ha caído por debajo del límite establecido. Precio actual: ${precioETH.toFixed(2)} EUR. ¡Oportunidad de inversión disponible!`);
+                    enviarMensajeTelegram(`⚠️ ¡ALERTA QUANTUM! Ethereum (ETH) ha caído por debajo del límite. Precio actual: ${precioETH.toFixed(2)} EUR.`);
                     ultimaAlertaEnviada = ahora;
                 }
             } catch(e){}
@@ -85,7 +80,7 @@ const procesarAutomatizacionesMes = async () => {
     } catch (err) { console.error("Error autos:", err.message); }
 };
 
-// APIs de rutas de intercambio
+// APIs
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
     try {
