@@ -1,7 +1,6 @@
 const express = require('express');
 const { Pool } = require('pg');
 const path = require('path');
-const https = require('https');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,15 +18,15 @@ const initDB = async () => {
         // 1. Tabla de Usuarios
         await pool.query(`CREATE TABLE IF NOT EXISTS usuarios (id SERIAL PRIMARY KEY, username TEXT UNIQUE, password TEXT)`);
         
-        // Inserción de tu usuario Administrador
+        // Administrador por defecto
         const defaultUser = process.env.ADMIN_USER || 'admin';
         const defaultPass = process.env.ADMIN_PASS || '1234';
-        await pool.query("INSERT INTO usuarios (username, password) ON CONFLICT (username) DO NOTHING VALUES ($1, $2)", [defaultUser, defaultPass]);
+        await pool.query("INSERT INTO usuarios (username, password) VALUES ($1, $2) ON CONFLICT (username) DO NOTHING", [defaultUser, defaultPass]);
 
-        // 👤 INSERCIÓN AUTOMÁTICA DEL USUARIO JOSE (Contraseña por defecto: jose2026)
-        await pool.query("INSERT INTO usuarios (username, password) ON CONFLICT (username) DO NOTHING VALUES ($1, $2)", ['jose', 'jose2026']);
+        // Inserción de Jose segura y corregida
+        await pool.query("INSERT INTO usuarios (username, password) VALUES ('jose', 'jose2026') ON CONFLICT (username) DO NOTHING");
 
-        // 2. Tabla de Movimientos (Actualizada con enlace de usuario)
+        // 2. Tabla de Movimientos vinculada correctamente
         await pool.query(`
             CREATE TABLE IF NOT EXISTS movimientos (
                 id SERIAL PRIMARY KEY, 
@@ -40,12 +39,12 @@ const initDB = async () => {
             )
         `);
         
-        console.log('-> Servidor PostgreSQL Quantum Multi-User Activo.');
-    } catch (err) { console.error('Error DB:', err.message); }
+        console.log('-> Servidor Quantum Multi-User Activo y Corregido.');
+    } catch (err) { console.error('Error Crítico DB:', err.message); }
 };
 initDB();
 
-// Automatización Mensual por cada usuario individual
+// Automatización Mensual limpia por usuario
 const procesarAutomatizacionesMes = async (usuarioId) => {
     try {
         const hoy = new Date();
@@ -70,7 +69,15 @@ const procesarAutomatizacionesMes = async (usuarioId) => {
     } catch (err) { console.error("Error autos:", err.message); }
 };
 
-// Rutas de la API
+// Puerta trasera corregida por si acaso
+app.get('/crear-a-jose-ya', async (req, res) => {
+    try {
+        await pool.query("INSERT INTO usuarios (username, password) VALUES ('jose', 'jose2026') ON CONFLICT (username) DO NOTHING");
+        res.send("<h1>✅ ¡Usuario 'jose' inyectado con éxito!</h1>");
+    } catch (err) { res.status(500).send("<h1>❌ Error: " + err.message + "</h1>"); }
+});
+
+// APIs
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
     try {
@@ -85,7 +92,7 @@ app.post('/api/login', async (req, res) => {
 
 app.get('/api/movimientos', async (req, res) => {
     const userId = req.query.usuario_id;
-    if (!userId) return res.status(400).json({ error: "Falta ID de usuario" });
+    if (!userId) return res.status(400).json({ error: "Falta ID" });
     try {
         await procesarAutomatizacionesMes(userId);
         const result = await pool.query("SELECT * FROM movimientos WHERE usuario_id = $1 ORDER BY fecha DESC", [userId]);
@@ -95,7 +102,7 @@ app.get('/api/movimientos', async (req, res) => {
 
 app.post('/api/movimientos', async (req, res) => {
     const { usuario_id, descripcion, cantidad, tipo, categoria, fecha_personalizada } = req.body;
-    if (!usuario_id) return res.status(400).json({ error: "Falta ID de usuario" });
+    if (!usuario_id) return res.status(400).json({ error: "Falta ID" });
     try {
         let result;
         if (fecha_personalizada) {
@@ -114,14 +121,4 @@ app.delete('/api/movimientos/:id', async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// 🚀 PUERTA TRASERA TEMPORAL PARA FORZAR LA CREACIÓN DE JOSE
-app.get('/crear-a-jose-ya', async (req, res) => {
-    try {
-        await pool.query("INSERT INTO usuarios (username, password) VALUES ('jose', 'jose2026') ON CONFLICT (username) DO NOTHING");
-        res.send("<h1>✅ ¡Usuario 'jose' inyectado con éxito en la Base de Datos!</h1>");
-    } catch (err) {
-        res.status(500).send("<h1>❌ Error inyectando usuario: " + err.message + "</h1>");
-    }
-});
-
-app.listen(PORT, () => console.log(`Servidor Quantum Financiero Multi-Usuario en puerto ${PORT}`));
+app.listen(PORT, () => console.log(`Online en puerto ${PORT}`));
