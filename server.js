@@ -65,7 +65,7 @@ function writeJSONDb(data) {
   }
 }
 
-// Database Initialization (Sequential & Idempotent)
+// Database Initialization (Sequential, Idempotent & Auto-Repair)
 async function initDatabase() {
   if (useLocalJSON) {
     console.log('📁 Base de datos JSON inicializada localmente.');
@@ -76,11 +76,11 @@ async function initDatabase() {
   let client;
   try {
     client = await pool.connect();
-    console.log('Connecting to database...');
+    console.log('Connecting to database and running verification checks...');
 
     await client.query('BEGIN');
 
-    // 1. Create table 'usuarios'
+    // 1. Create table 'usuarios' first
     await client.query(`
       CREATE TABLE IF NOT EXISTS usuarios (
         id SERIAL PRIMARY KEY,
@@ -89,7 +89,27 @@ async function initDatabase() {
       );
     `);
 
-    // 2. Create table 'movimientos' with ON DELETE CASCADE
+    // 2. Verify 'movimientos' table structure compatibility
+    const movimientosColCheck = await client.query(`
+      SELECT column_name 
+      FROM information_schema.columns 
+      WHERE table_name = 'movimientos' AND column_name = 'usuario_id';
+    `);
+    
+    const tableExistsResult = await client.query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_name = 'movimientos'
+      );
+    `);
+    
+    const movimientosTableExists = tableExistsResult.rows[0].exists;
+    if (movimientosTableExists && movimientosColCheck.rows.length === 0) {
+      console.log('⚠️ La tabla "movimientos" existe pero no es compatible (falta columna "usuario_id"). Recreándola...');
+      await client.query('DROP TABLE IF EXISTS movimientos CASCADE;');
+    }
+
+    // 3. Create table 'movimientos' with ON DELETE CASCADE
     await client.query(`
       CREATE TABLE IF NOT EXISTS movimientos (
         id SERIAL PRIMARY KEY,
@@ -102,7 +122,27 @@ async function initDatabase() {
       );
     `);
 
-    // 3. Create table 'bancos_usuario' with UNIQUE (usuario_id, banco_nombre)
+    // 4. Verify 'bancos_usuario' table structure compatibility
+    const bancosColCheck = await client.query(`
+      SELECT column_name 
+      FROM information_schema.columns 
+      WHERE table_name = 'bancos_usuario' AND column_name = 'usuario_id';
+    `);
+    
+    const bancosTableExistsResult = await client.query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_name = 'bancos_usuario'
+      );
+    `);
+    
+    const bancosTableExists = bancosTableExistsResult.rows[0].exists;
+    if (bancosTableExists && bancosColCheck.rows.length === 0) {
+      console.log('⚠️ La tabla "bancos_usuario" existe pero no es compatible (falta columna "usuario_id"). Recreándola...');
+      await client.query('DROP TABLE IF EXISTS bancos_usuario CASCADE;');
+    }
+
+    // 5. Create table 'bancos_usuario' with UNIQUE (usuario_id, banco_nombre)
     await client.query(`
       CREATE TABLE IF NOT EXISTS bancos_usuario (
         id SERIAL PRIMARY KEY,
@@ -113,14 +153,14 @@ async function initDatabase() {
       );
     `);
 
-    // 4. Seed admin user
+    // 6. Seed admin user
     const adminCheck = await client.query('SELECT * FROM usuarios WHERE username = $1', ['admin']);
     if (adminCheck.rows.length === 0) {
       await client.query('INSERT INTO usuarios (username, password) VALUES ($1, $2)', ['admin', '1234']);
       console.log('Seeded default admin user: admin / 1234');
     }
 
-    // 5. Seed test user
+    // 7. Seed test user
     const joseCheck = await client.query('SELECT * FROM usuarios WHERE username = $1', ['jose']);
     if (joseCheck.rows.length === 0) {
       await client.query('INSERT INTO usuarios (username, password) VALUES ($1, $2)', ['jose', 'jose2026']);
@@ -128,7 +168,7 @@ async function initDatabase() {
     }
 
     await client.query('COMMIT');
-    console.log('Database initialized successfully.');
+    console.log('Database initialized and auto-repaired successfully.');
   } catch (error) {
     if (client) {
       await client.query('ROLLBACK');
