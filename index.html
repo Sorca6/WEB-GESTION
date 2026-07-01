@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WealthFlow | Inteligencia Patrimonial</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Plataforma avanzada de control contable, multibanco e inteligencia patrimonial multiusuario.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Google Fonts - Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    // Custom tailwind configuration to match specs
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    body {
+      font-family: 'Outfit', sans-serif;
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #020617; /* Slate-950 */
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b; /* Slate-800 */
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155; /* Slate-700 */
+    }
+
+    /* Fade-in Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    /* Grid Mesh Background */
+    .bg-grid {
+      background-size: 50px 50px;
+      background-image: 
+        linear-gradient(to right, rgba(30, 41, 59, 0.15) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(30, 41, 59, 0.15) 1px, transparent 1px);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col bg-grid relative overflow-x-hidden">
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 max-w-sm w-full"></div>
+
+  <!-- ================= MODULE A: LOGIN SCREEN ================= -->
+  <div id="login-container" class="flex-1 flex items-center justify-center px-4 py-12 relative z-10">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl relative overflow-hidden animate-fade-in">
+      <!-- Glow effect inside card -->
+      <div class="absolute -top-24 -left-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl"></div>
+      <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl"></div>
+
+      <div class="relative z-10">
+        <!-- Logo -->
+        <div class="flex items-center gap-2.5 justify-center mb-8">
+          <div class="bg-emerald-500/10 text-emerald-400 p-2.5 rounded-2xl border border-emerald-500/20 shadow-inner">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <span class="text-2xl font-bold tracking-tight bg-gradient-to-r from-emerald-400 via-teal-400 to-blue-400 bg-clip-text text-transparent">WealthFlow</span>
+        </div>
+
+        <h2 class="text-xl font-bold text-center text-slate-100 mb-2">Ingresar a la Plataforma</h2>
+        <p class="text-sm text-slate-400 text-center mb-8">Acceso multiusuario e inteligencia patrimonial</p>
+
+        <!-- Error Alert -->
+        <div id="login-error-alert" class="hidden mb-6 p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-2xl text-sm flex items-start gap-2.5">
+          <svg class="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span id="login-error-text">Credenciales inválidas</span>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" class="space-y-6">
+          <div>
+            <label for="login-username" class="block text-sm font-medium text-slate-300 mb-2">Usuario</label>
+            <input type="text" id="login-username" required class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-100 rounded-2xl px-4 py-3 outline-none transition-all placeholder:text-slate-600" placeholder="Nombre de usuario">
+          </div>
+          <div>
+            <label for="login-password" class="block text-sm font-medium text-slate-300 mb-2">Contraseña</label>
+            <input type="password" id="login-password" required class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-100 rounded-2xl px-4 py-3 outline-none transition-all placeholder:text-slate-600" placeholder="••••••••">
+          </div>
+          <button type="submit" class="w-full bg-emerald-400 hover:bg-emerald-500 active:scale-[0.98] text-slate-950 font-bold py-3.5 px-6 rounded-2xl transition-all shadow-lg shadow-emerald-500/10 mt-2">
+            Iniciar Sesión
+          </button>
+        </form>
+
+        <!-- Test credentials helper -->
+        <div class="mt-8 pt-6 border-t border-slate-800/60 text-center">
+          <p class="text-xs text-slate-500">Usuarios por defecto (autosembrados):</p>
+          <p class="text-xs text-slate-400 mt-1.5"><code class="bg-slate-950 px-1.5 py-0.5 rounded text-emerald-400 border border-slate-800/80">admin / 1234</code> o <code class="bg-slate-950 px-1.5 py-0.5 rounded text-blue-400 border border-slate-800/80">jose / jose2026</code></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ================= MAIN DASHBOARD CONTAINER ================= -->
+  <div id="dashboard-container" class="hidden flex-1 flex flex-col relative z-10 animate-fade-in">
+    
+    <!-- Top Header -->
+    <header class="bg-slate-900/60 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-40 transition-all">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <!-- Logo -->
+        <div class="flex items-center gap-2">
+          <div class="bg-emerald-500/10 text-emerald-400 p-2 rounded-xl border border-emerald-500/20">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <span class="text-xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent tracking-tight">WealthFlow</span>
+        </div>
+
+        <!-- User Info / Logout -->
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2">
+            <span class="text-sm text-slate-400">Bienvenido,</span>
+            <span id="header-username" class="text-sm font-semibold text-slate-100">Usuario</span>
+            <span id="admin-badge" class="hidden text-[10px] bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded-full border border-amber-500/20 font-bold uppercase tracking-wider">Admin</span>
+          </div>
+          
+          <button id="logout-btn" class="bg-slate-800 hover:bg-slate-700 hover:text-rose-400 text-slate-300 p-2 rounded-xl border border-slate-700/60 transition-all flex items-center gap-1.5 text-xs font-medium">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      
+      <!-- GRID 1: Wealth & Banks Indicator + Chart.js Distribution -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- MODULE B: Net Worth & Banks Selector (Col-span 2) -->
+        <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl relative overflow-hidden flex flex-col justify-between">
+          <div class="absolute -top-12 -left-12 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl"></div>
+
+          <div>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 relative z-10">
+              <div>
+                <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Patrimonio Líquido Total</h3>
+                <div class="flex items-baseline gap-2 mt-1">
+                  <span id="total-wealth-amount" class="text-4xl font-extrabold text-slate-100 tracking-tight transition-all duration-300">0,00 €</span>
+                  <span class="text-xs bg-emerald-400/10 text-emerald-400 px-2.5 py-0.5 rounded-full border border-emerald-400/20 font-medium">Tiempo Real</span>
+                </div>
+              </div>
+
+              <!-- Bank Selector Dropdown -->
+              <div class="flex items-center gap-2 max-w-xs w-full sm:w-auto">
+                <select id="bank-selector" class="bg-slate-950 border border-slate-800 text-slate-100 rounded-xl px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all flex-1 min-w-[180px]">
+                  <option value="" disabled selected>Añadir banco...</option>
+                  <option value="CaixaBank">CaixaBank</option>
+                  <option value="BBVA">BBVA</option>
+                  <option value="Santander">Santander</option>
+                  <option value="Sabadell">Sabadell</option>
+                  <option value="Bankinter">Bankinter</option>
+                  <option value="Unicaja">Unicaja</option>
+                  <option value="Openbank">Openbank</option>
+                  <option value="ING">ING</option>
+                  <option value="Ibercaja">Ibercaja</option>
+                  <option value="Revolut">Revolut</option>
+                </select>
+                <button id="add-bank-btn" class="bg-emerald-400 hover:bg-emerald-500 active:scale-95 text-slate-950 font-bold px-4 py-2 text-sm rounded-xl transition-all shadow-md shadow-emerald-400/5">
+                  Añadir
+                </button>
+              </div>
+            </div>
+
+            <!-- Active Banks Cards Grid -->
+            <div id="banks-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 max-h-[260px] overflow-y-auto pr-1">
+              <!-- Dynamically populated bank balance inputs go here -->
+              <div id="empty-banks-state" class="col-span-full py-8 text-center text-slate-500 text-sm border border-dashed border-slate-800 rounded-2xl">
+                No tienes cuentas bancarias activas. Añade una para empezar a sumar tu patrimonio.
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-4 pt-4 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-500">
+            <span>* Los saldos se guardan automáticamente en base de datos mientras escribes (Debounce).</span>
+            <span class="font-semibold text-emerald-400/80">Sincronizado</span>
+          </div>
+        </div>
+
+        <!-- MODULE D: Chart.js Doughnut Display (Col-span 1) -->
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl flex flex-col">
+          <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Distribución Patrimonial</h3>
+          
+          <div class="flex-grow flex items-center justify-center relative min-h-[220px]">
+            <canvas id="wealthChart" class="max-w-[240px] max-h-[240px]"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- GRID 2: KPIs Resumen de Movimientos -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- KPI 1: Ingresos -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-2 h-full bg-emerald-400"></div>
+          <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Ingresos Totales</div>
+          <div id="kpi-ingresos" class="text-2xl font-bold text-emerald-400 mt-2">0,00 €</div>
+          <div class="text-[10px] text-slate-500 mt-1">Suma de flujos positivos</div>
+        </div>
+        <!-- KPI 2: Gastos -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-2 h-full bg-rose-400"></div>
+          <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Gastos Totales</div>
+          <div id="kpi-gastos" class="text-2xl font-bold text-rose-400 mt-2">0,00 €</div>
+          <div class="text-[10px] text-slate-500 mt-1">Suma de egresos directos</div>
+        </div>
+        <!-- KPI 3: Ahorros -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-2 h-full bg-amber-400"></div>
+          <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Ahorros Totales</div>
+          <div id="kpi-ahorros" class="text-2xl font-bold text-amber-400 mt-2">0,00 €</div>
+          <div class="text-[10px] text-slate-500 mt-1">Huchas, metas y fondos</div>
+        </div>
+        <!-- KPI 4: Inversiones -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-2 h-full bg-blue-400"></div>
+          <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Inversiones Totales</div>
+          <div id="kpi-inversiones" class="text-2xl font-bold text-blue-400 mt-2">0,00 €</div>
+          <div class="text-[10px] text-slate-500 mt-1">Activos y fondos indexados</div>
+        </div>
+      </div>
+
+      <!-- GRID 3: Historial Contable y Formulario de Movimientos -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Table & History (Col-span 2) -->
+        <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl flex flex-col justify-between">
+          <div>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h3 class="text-lg font-bold text-slate-100">Historial Financiero</h3>
+                <p class="text-xs text-slate-400">Listado completo de flujos registrados</p>
+              </div>
+
+              <!-- Filter Buttons & CSV Export -->
+              <div class="flex flex-wrap items-center gap-2">
+                <button id="export-csv-btn" class="bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700/80 px-3.5 py-1.5 text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                  </svg>
+                  Exportar CSV
+                </button>
+              </div>
+            </div>
+
+            <!-- Filters list -->
+            <div class="flex gap-1.5 mb-4 overflow-x-auto pb-2">
+              <button data-filter="todos" class="filter-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-emerald-400 text-slate-950">Todos</button>
+              <button data-filter="ingreso" class="filter-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-slate-850 hover:bg-slate-800 text-slate-300">Ingresos</button>
+              <button data-filter="gasto" class="filter-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-slate-850 hover:bg-slate-800 text-slate-300">Gastos</button>
+              <button data-filter="ahorro" class="filter-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-slate-850 hover:bg-slate-800 text-slate-300">Ahorros</button>
+              <button data-filter="inversion" class="filter-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-slate-850 hover:bg-slate-800 text-slate-300">Inversiones</button>
+            </div>
+
+            <!-- Responsive Table -->
+            <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950/40">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-slate-800 text-xs text-slate-400 font-semibold uppercase bg-slate-900/40">
+                    <th class="py-3 px-4">Fecha</th>
+                    <th class="py-3 px-4">Detalle</th>
+                    <th class="py-3 px-4">Categoría</th>
+                    <th class="py-3 px-4 text-right">Importe</th>
+                    <th class="py-3 px-4 text-center">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="movements-table-body" class="divide-y divide-slate-800/50 text-sm">
+                  <!-- Dynamically populated row elements -->
+                  <tr>
+                    <td colspan="5" class="py-12 text-center text-slate-500">Cargando movimientos...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODULE C (part 2): Add movement form (Col-span 1) -->
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl flex flex-col justify-between">
+          <div>
+            <h3 class="text-lg font-bold text-slate-100 mb-2">Anotación Manual</h3>
+            <p class="text-xs text-slate-400 mb-6">Añade flujos de ingresos, gastos, ahorros o inversiones</p>
+
+            <form id="movement-form" class="space-y-4">
+              <!-- Concept -->
+              <div>
+                <label for="move-desc" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Concepto / Detalle</label>
+                <input type="text" id="move-desc" required class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-100 rounded-xl px-3 py-2.5 text-sm outline-none transition-all placeholder:text-slate-650" placeholder="Ej. Nómina mensual, Supermercado">
+              </div>
+
+              <!-- Quantity -->
+              <div>
+                <label for="move-amount" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Importe (€)</label>
+                <input type="number" id="move-amount" step="0.01" min="0.01" required class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-100 rounded-xl px-3 py-2.5 text-sm outline-none transition-all placeholder:text-slate-650" placeholder="0.00">
+              </div>
+
+              <!-- Date (Optional) -->
+              <div>
+                <label for="move-date" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Fecha (Opcional)</label>
+                <input type="date" id="move-date" class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-100 rounded-xl px-3 py-2.5 text-sm outline-none transition-all">
+              </div>
+
+              <!-- Type -->
+              <div>
+                <label for="move-type" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Tipo de Movimiento</label>
+                <select id="move-type" required class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-100 rounded-xl px-3 py-2.5 text-sm outline-none transition-all">
+                  <option value="ingreso">Ingreso</option>
+                  <option value="gasto">Gasto</option>
+                  <option value="ahorro">Ahorro</option>
+                  <option value="inversion">Inversión</option>
+                </select>
+              </div>
+
+              <!-- Subcategory -->
+              <div>
+                <label for="move-category" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Categoría</label>
+                <select id="move-category" required class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-100 rounded-xl px-3 py-2.5 text-sm outline-none transition-all">
+                  <!-- Dynamically populated based on movement type -->
+                </select>
+              </div>
+
+              <button type="submit" class="w-full bg-emerald-400 hover:bg-emerald-500 active:scale-95 text-slate-950 font-bold py-3 rounded-xl transition-all shadow-md shadow-emerald-500/10 mt-4 flex items-center justify-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Guardar Registro
+              </button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- MODULE E: ADMIN PANEL (Exclusivo Administrador) -->
+      <div id="admin-panel-container" class="hidden bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl relative overflow-hidden animate-fade-in">
+        <div class="absolute -top-12 -right-12 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl"></div>
+
+        <div class="border-b border-slate-800 pb-4 mb-6 flex items-center justify-between">
+          <div>
+            <h3 class="text-lg font-bold text-slate-100">Consola de Administración</h3>
+            <p class="text-xs text-slate-400">Control de usuarios y datos del sistema (Rol Admin)</p>
+          </div>
+          <span class="text-[10px] bg-amber-500/10 text-amber-400 px-3 py-1 rounded-full border border-amber-500/20 font-bold uppercase tracking-wider">Acceso Restringido</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          <!-- Users table (Col-span 2) -->
+          <div class="lg:col-span-2 space-y-4">
+            <h4 class="text-sm font-semibold text-slate-300">Usuarios Registrados</h4>
+            
+            <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950/40">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-slate-800 text-xs text-slate-400 font-semibold uppercase bg-slate-900/40">
+                    <th class="py-3 px-4">ID</th>
+                    <th class="py-3 px-4">Usuario</th>
+                    <th class="py-3 px-4">Rol</th>
+                    <th class="py-3 px-4 text-center">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-users-table-body" class="divide-y divide-slate-800/50 text-sm">
+                  <!-- Dynamically populated row elements -->
+                  <tr>
+                    <td colspan="4" class="py-8 text-center text-slate-500">Cargando usuarios...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Add User Form (Col-span 1) -->
+          <div class="space-y-4">
+            <h4 class="text-sm font-semibold text-slate-300">Crear Nuevo Usuario</h4>
+            
+            <form id="admin-user-form" class="space-y-4 bg-slate-950/40 p-5 rounded-2xl border border-slate-800">
+              <!-- Username -->
+              <div>
+                <label for="admin-new-username" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Nombre de Usuario</label>
+                <input type="text" id="admin-new-username" required class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-100 rounded-xl px-3 py-2.5 text-sm outline-none transition-all placeholder:text-slate-700" placeholder="Ej. maria">
+              </div>
+
+              <!-- Password -->
+              <div>
+                <label for="admin-new-password" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Contraseña</label>
+                <input type="password" id="admin-new-password" required class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-100 rounded-xl px-3 py-2.5 text-sm outline-none transition-all placeholder:text-slate-700" placeholder="••••••••">
+              </div>
+
+              <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 active:scale-95 text-slate-950 font-bold py-3 rounded-xl transition-all shadow-md shadow-amber-500/10 flex items-center justify-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                </svg>
+                Crear Usuario
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-900 py-6 mt-12 text-center text-xs text-slate-500">
+      <div class="max-w-7xl mx-auto px-4">
+        <p>© 2026 WealthFlow. Todos los derechos reservados. Desarrollado con resiliencia en Node.js, Express y PostgreSQL.</p>
+      </div>
+    </footer>
+  </div>
+
+
+  <!-- ================= CLIENT SIDE JAVASCRIPT ================= -->
+  <script>
+    // Subcategories by type mapping
+    const categoriesByType = {
+      ingreso: ['Nómina', 'Ventas', 'Inversiones', 'Otros'],
+      gasto: ['Alquiler/Hipoteca', 'Alimentación', 'Transporte', 'Ocio', 'Servicios', 'Otros'],
+      ahorro: ['Fondo de Emergencia', 'Hucha', 'Metas', 'Otros'],
+      inversion: ['Acciones', 'Criptomonedas', 'Bienes Raíces', 'Fondos Indexados', 'Otros']
+    };
+
+    // State management
+    let currentUser = null;
+    let movements = [];
+    let activeBanks = new Set();
+    let currentBalances = {}; // Format: { "ING": 1200.50, "BBVA": 0 }
+    let currentFilter = 'todos';
+    let chartInstance = null;
+
+    // Toast Notification helper
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `flex items-center p-4 rounded-2xl shadow-lg border transition-all duration-300 transform translate-y-2 opacity-0 max-w-sm w-full ${
+        type === 'success' 
+          ? 'bg-slate-900 border-emerald-500/20 text-emerald-400 shadow-emerald-500/5' 
+          : 'bg-slate-900 border-rose-500/20 text-rose-400 shadow-rose-500/5'
+      }`;
+      
+      toast.innerHTML = `
+        <div class="mr-3 shrink-0">
+          ${type === 'success' 
+            ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+            : '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+          }
+        </div>
+        <div class="text-sm font-medium leading-tight">${message}</div>
+      `;
+      
+      container.appendChild(toast);
+      
+      // Animate In
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      }, 10);
+      
+      // Auto Dismiss
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => {
+          toast.remove();
+        }, 300);
+      }, 4000);
+    }
+
+    // Debounce wrapper
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+
+    // API helper: Database save with auto-retry or graceful fail
+    const saveBalanceToServer = debounce(async (bankName, val) => {
+      try {
+        const response = await fetch('/api/bancos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            usuario_id: currentUser.id,
+            banco_nombre: bankName,
+            saldo: val
+          })
+        });
+        if (!response.ok) {
+          throw new Error();
+        }
+        console.log(`[Sync] Saldo bancario guardado: ${bankName} = ${val} €`);
+      } catch (err) {
+        showToast(`Error al guardar en base de datos: saldo de ${bankName}`, 'error');
+      }
+    }, 500);
+
+    // Dynamic configuration of Categories based on movement type selected
+    const moveTypeSelect = document.getElementById('move-type');
+    const moveCategorySelect = document.getElementById('move-category');
+    
+    function populateCategories(type) {
+      moveCategorySelect.innerHTML = '';
+      const list = categoriesByType[type] || [];
+      list.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        moveCategorySelect.appendChild(opt);
+      });
+    }
+
+    moveTypeSelect.addEventListener('change', (e) => {
+      populateCategories(e.target.value);
+    });
+
+    // Initial setup
+    populateCategories('ingreso');
+
+    // Checking Session Persistence in localStorage
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedUser = localStorage.getItem('currentUser');
+      if (savedUser) {
+        try {
+          currentUser = JSON.parse(savedUser);
+          initDashboard();
+        } catch (e) {
+          localStorage.removeItem('currentUser');
+          showLoginScreen();
+        }
+      } else {
+        showLoginScreen();
+      }
+    });
+
+    function showLoginScreen() {
+      document.getElementById('login-container').classList.remove('hidden');
+      document.getElementById('dashboard-container').classList.add('hidden');
+    }
+
+    // Handle Login Form Submit
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const usernameInput = document.getElementById('login-username').value.trim();
+      const passwordInput = document.getElementById('login-password').value;
+      const errorAlert = document.getElementById('login-error-alert');
+      const errorText = document.getElementById('login-error-text');
+
+      errorAlert.classList.add('hidden');
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: usernameInput, password: passwordInput })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          errorText.textContent = data.error || 'Credenciales inválidas.';
+          errorAlert.classList.remove('hidden');
+          return;
+        }
+
+        // Success
+        currentUser = data;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        showToast(`¡Bienvenido de vuelta, ${currentUser.username}!`);
+        initDashboard();
+      } catch (err) {
+        errorText.textContent = 'Fallo de conexión con el servidor.';
+        errorAlert.classList.remove('hidden');
+      }
+    });
+
+    // Handle Logout
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      localStorage.removeItem('currentUser');
+      currentUser = null;
+      movements = [];
+      activeBanks.clear();
+      currentBalances = {};
+      
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
+      
+      showToast('Sesión cerrada correctamente.');
+      showLoginScreen();
+    });
+
+    // Initialize Dashboard UI and Fetch User Data
+    async function initDashboard() {
+      // Toggle views
+      document.getElementById('login-container').classList.add('hidden');
+      document.getElementById('dashboard-container').classList.remove('hidden');
+      
+      // Header details
+      document.getElementById('header-username').textContent = currentUser.username;
+      
+      if (currentUser.isAdmin) {
+        document.getElementById('admin-badge').classList.remove('hidden');
+        document.getElementById('admin-panel-container').classList.remove('hidden');
+        loadAdminUsers();
+      } else {
+        document.getElementById('admin-badge').classList.add('hidden');
+        document.getElementById('admin-panel-container').classList.add('hidden');
+      }
+
+      // Load data in parallel
+      await Promise.all([
+        fetchBanks(),
+        fetchMovements()
+      ]);
+    }
+
+    // Fetch user's bank balances from backend
+    async function fetchBanks() {
+      try {
+        const response = await fetch(`/api/bancos?usuario_id=${currentUser.id}`);
+        if (!response.ok) throw new Error();
+        const data = await response.json();
+        
+        activeBanks.clear();
+        currentBalances = {};
+        
+        data.forEach(b => {
+          activeBanks.add(b.banco_nombre);
+          currentBalances[b.banco_nombre] = parseFloat(b.saldo) || 0;
+        });
+
+        renderBanksGrid();
+        recalculateNetWorth();
+        renderChart();
+      } catch (err) {
+        showToast('Error al cargar balances bancarios del servidor.', 'error');
+      }
+    }
+
+    // Fetch user's financial movements from backend
+    async function fetchMovements() {
+      try {
+        const response = await fetch(`/api/movimientos?usuario_id=${currentUser.id}`);
+        if (!response.ok) throw new Error();
+        const data = await response.json();
+        
+        movements = data;
+        renderMovementsTable();
+        recalculateKPIs();
+      } catch (err) {
+        showToast('Error al cargar movimientos desde el servidor.', 'error');
+      }
+    }
+
+    // Recalculate and display Heritage (Total Liquid Wealth)
+    function recalculateNetWorth() {
+      let total = 0;
+      activeBanks.forEach(banco => {
+        total += currentBalances[banco] || 0;
+      });
+      
+      document.getElementById('total-wealth-amount').textContent = total.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
+    }
+
+    // Render grid of active bank cards
+    function renderBanksGrid() {
+      const grid = document.getElementById('banks-grid');
+      const emptyState = document.getElementById('empty-banks-state');
+
+      // Clear all dynamically added bank cards
+      const cards = grid.querySelectorAll('.bank-card-item');
+      cards.forEach(c => c.remove());
+
+      if (activeBanks.size === 0) {
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      // Sort alphabetically for consistent rendering order
+      Array.from(activeBanks).sort().forEach(bankName => {
+        const card = document.createElement('div');
+        card.className = 'bank-card-item bg-slate-950 border border-slate-800/80 rounded-2xl p-4 flex flex-col justify-between hover:border-slate-700 transition-all duration-300 relative';
+        
+        const balance = currentBalances[bankName] || 0;
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-semibold text-slate-200">${bankName}</span>
+            <button onclick="removeBankCard('${bankName}')" class="text-slate-500 hover:text-rose-400 transition-colors p-1" title="Eliminar banco de la visualización">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="relative mt-2">
+            <span class="absolute left-3 top-2.5 text-xs text-slate-500 font-medium">Saldo:</span>
+            <input type="number" step="0.01" value="${balance}" oninput="updateLiveBalance('${bankName}', this.value)" class="w-full bg-slate-900 border border-slate-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-slate-100 rounded-xl pl-14 pr-9 py-2 text-sm outline-none transition-all font-semibold" placeholder="0.00">
+            <span class="absolute right-3 top-2 text-sm text-slate-400 font-semibold">€</span>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Handles bank dropdown selections
+    document.getElementById('add-bank-btn').addEventListener('click', async () => {
+      const select = document.getElementById('bank-selector');
+      const bankName = select.value;
+
+      if (!bankName) {
+        showToast('Selecciona un banco del listado primero.', 'error');
+        return;
+      }
+
+      if (activeBanks.has(bankName)) {
+        showToast('Esta cuenta bancaria ya se encuentra activa.', 'error');
+        select.value = '';
+        return;
+      }
+
+      // Add to local state
+      activeBanks.add(bankName);
+      currentBalances[bankName] = 0;
+
+      // Update UI
+      renderBanksGrid();
+      recalculateNetWorth();
+      renderChart();
+
+      // Trigger server save
+      await saveBalanceToServer(bankName, 0);
+      showToast(`${bankName} añadida con éxito.`);
+      select.value = '';
+    });
+
+    // Remove bank card from dashboard (deletes/sets to 0 in local state & DB)
+    window.removeBankCard = async function (bankName) {
+      if (!confirm(`¿Estás seguro de quitar ${bankName} de tus balances? Se guardará con saldo 0 en el servidor.`)) {
+        return;
+      }
+
+      activeBanks.delete(bankName);
+      currentBalances[bankName] = 0;
+
+      renderBanksGrid();
+      recalculateNetWorth();
+      renderChart();
+
+      await saveBalanceToServer(bankName, 0);
+      showToast(`${bankName} quitada del panel.`);
+    };
+
+    // Auto-calculates liquid wealth and updates chart instantly as user types. Debounces DB call.
+    window.updateLiveBalance = function (bankName, rawValue) {
+      const val = parseFloat(rawValue) || 0;
+      currentBalances[bankName] = val;
+      
+      recalculateNetWorth();
+      renderChart();
+
+      // Debounce trigger to save in backend
+      saveBalanceToServer(bankName, val);
+    };
+
+    // Calculate sum of movements for KPIs
+    function recalculateKPIs() {
+      let totalIngreso = 0;
+      let totalGasto = 0;
+      let totalAhorro = 0;
+      let totalInversion = 0;
+
+      movements.forEach(m => {
+        const val = parseFloat(m.cantidad) || 0;
+        if (m.tipo === 'ingreso') totalIngreso += val;
+        else if (m.tipo === 'gasto') totalGasto += val;
+        else if (m.tipo === 'ahorro') totalAhorro += val;
+        else if (m.tipo === 'inversion') totalInversion += val;
+      });
+
+      document.getElementById('kpi-ingresos').textContent = totalIngreso.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
+      document.getElementById('kpi-gastos').textContent = totalGasto.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
+      document.getElementById('kpi-ahorros').textContent = totalAhorro.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
+      document.getElementById('kpi-inversiones').textContent = totalInversion.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
+    }
+
+    // Handles manual transaction insertion
+    document.getElementById('movement-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const descInput = document.getElementById('move-desc');
+      const amountInput = document.getElementById('move-amount');
+      const dateInput = document.getElementById('move-date');
+      const typeInput = document.getElementById('move-type');
+      const categoryInput = document.getElementById('move-category');
+
+      const desc = descInput.value.trim();
+      const amount = parseFloat(amountInput.value) || 0;
+      const type = typeInput.value;
+      const category = categoryInput.value;
+      
+      // Date parameter is optional. If left blank, we omit and server uses NOW()
+      const dateVal = dateInput.value ? new Date(dateInput.value).toISOString() : null;
+
+      try {
+        const response = await fetch('/api/movimientos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            usuario_id: currentUser.id,
+            descripcion: desc,
+            cantidad: amount,
+            tipo: type,
+            categoria: category,
+            fecha: dateVal
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Error al guardar movimiento en el servidor');
+        }
+
+        const newMove = await response.json();
+        
+        // Success
+        movements.unshift(newMove); // add to top
+        showToast('Registro de movimiento guardado con éxito.');
+        
+        // Reset form
+        descInput.value = '';
+        amountInput.value = '';
+        dateInput.value = '';
+        typeInput.value = 'ingreso';
+        populateCategories('ingreso');
+
+        // Refresh UI
+        renderMovementsTable();
+        recalculateKPIs();
+      } catch (err) {
+        showToast('No se pudo guardar el registro contable.', 'error');
+      }
+    });
+
+    // Delete individual transaction
+    window.deleteMovement = async function (id) {
+      if (!confirm('¿Estás seguro de eliminar este registro contable?')) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/movimientos/${id}`, {
+          method: 'DELETE'
+        });
+
+        if (!response.ok) throw new Error();
+
+        movements = movements.filter(m => m.id !== id);
+        renderMovementsTable();
+        recalculateKPIs();
+        showToast('Movimiento eliminado.');
+      } catch (err) {
+        showToast('Error al intentar borrar el movimiento.', 'error');
+      }
+    };
+
+    // Render historical table rows
+    function renderMovementsTable() {
+      const tbody = document.getElementById('movements-table-body');
+      tbody.innerHTML = '';
+
+      const filtered = movements.filter(m => {
+        if (currentFilter === 'todos') return true;
+        return m.tipo === currentFilter;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="py-8 text-center text-slate-500 text-xs">No se encontraron movimientos registrados en esta categoría.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      filtered.forEach(m => {
+        const tr = document.createElement('tr');
+        tr.className = 'border-b border-slate-900 hover:bg-slate-900/30 transition-all';
+
+        const rawDate = new Date(m.fecha);
+        const formattedDate = rawDate.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+        // Accent coloring according to movement type:
+        // - Ingreso: Green (emerald)
+        // - Gasto: Red (rose)
+        // - Ahorro: Amber
+        // - Inversión: Blue
+        let typeBadgeClass = '';
+        let amountTextClass = '';
+        let sign = '';
+
+        if (m.tipo === 'ingreso') {
+          typeBadgeClass = 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+          amountTextClass = 'text-emerald-400';
+          sign = '+';
+        } else if (m.tipo === 'gasto') {
+          typeBadgeClass = 'bg-rose-500/10 text-rose-400 border border-rose-500/20';
+          amountTextClass = 'text-rose-400';
+          sign = '-';
+        } else if (m.tipo === 'ahorro') {
+          typeBadgeClass = 'bg-amber-500/10 text-amber-400 border border-amber-500/20';
+          amountTextClass = 'text-amber-400';
+          sign = '';
+        } else if (m.tipo === 'inversion') {
+          typeBadgeClass = 'bg-blue-500/10 text-blue-400 border border-blue-500/20';
+          amountTextClass = 'text-blue-400';
+          sign = '';
+        }
+
+        const amountVal = parseFloat(m.cantidad).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        tr.innerHTML = `
+          <td class="py-3.5 px-4 text-xs font-semibold text-slate-400">${formattedDate}</td>
+          <td class="py-3.5 px-4 font-medium text-slate-200">
+            <div>${m.descripcion}</div>
+            <div class="block sm:hidden mt-0.5"><span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded ${typeBadgeClass}">${m.tipo}</span></div>
+          </td>
+          <td class="py-3.5 px-4">
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full ${typeBadgeClass}">${m.categoria}</span>
+          </td>
+          <td class="py-3.5 px-4 text-right font-bold ${amountTextClass}">${sign} ${amountVal} €</td>
+          <td class="py-3.5 px-4 text-center">
+            <button onclick="deleteMovement(${m.id})" class="text-slate-600 hover:text-rose-400 transition-colors p-1" title="Eliminar registro">
+              <svg class="w-4 h-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+              </svg>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Handles movements list filtering
+    document.querySelectorAll('.filter-tab').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        // Toggle selected state classes
+        document.querySelectorAll('.filter-tab').forEach(t => {
+          t.classList.remove('bg-emerald-400', 'text-slate-950');
+          t.classList.add('bg-slate-850', 'text-slate-300');
+        });
+
+        e.target.classList.remove('bg-slate-850', 'text-slate-300');
+        e.target.classList.add('bg-emerald-400', 'text-slate-950');
+
+        currentFilter = e.target.getAttribute('data-filter');
+        renderMovementsTable();
+      });
+    });
+
+    // Exporter function for CSV (semicolon delimited with BOM for Excel compatibility)
+    document.getElementById('export-csv-btn').addEventListener('click', () => {
+      if (movements.length === 0) {
+        showToast('No hay movimientos registrados para exportar.', 'error');
+        return;
+      }
+
+      let csv = "\uFEFF"; // UTF-8 Byte Order Mark (BOM)
+      csv += "Fecha;Detalle;Tipo;Categoría;Importe (€)\n";
+
+      movements.forEach(m => {
+        const rawDate = new Date(m.fecha);
+        const formattedDate = rawDate.toLocaleDateString('es-ES');
+        const desc = m.descripcion.replace(/"/g, '""');
+        const tipo = m.tipo.toUpperCase();
+        const cat = m.categoria;
+        const cant = parseFloat(m.cantidad).toFixed(2);
+        
+        csv += `"${formattedDate}";"${desc}";"${tipo}";"${cat}";${cant}\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `wealthflow_historial_${currentUser.username}.csv`);
+      link.style.visibility = 'hidden';
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('Descarga iniciada: historial_financiero.csv');
+    });
+
+    // Renders active banks distribution using Chart.js
+    function renderChart() {
+      const ctx = document.getElementById('wealthChart').getContext('2d');
+      
+      const labels = [];
+      const data = [];
+      let totalSum = 0;
+
+      // Extract current active balances
+      activeBanks.forEach(bancoName => {
+        const val = currentBalances[bancoName] || 0;
+        if (val > 0) {
+          labels.push(bancoName);
+          data.push(val);
+          totalSum += val;
+        }
+      });
+
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+
+      // Clean empty state (renders neutral slate ring) if no assets are declared
+      if (totalSum === 0) {
+        chartInstance = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Esperando saldos...'],
+            datasets: [{
+              data: [1],
+              backgroundColor: ['#1e293b'], // Slate-800
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  color: '#64748b', // Slate-500
+                  font: { family: 'Outfit', size: 11, weight: 'semibold' }
+                }
+              },
+              tooltip: { enabled: false }
+            },
+            cutout: '75%'
+          }
+        });
+      } else {
+        // Render current distribution
+        const colorPalette = [
+          '#34d399', // Emerald-400
+          '#60a5fa', // Blue-400
+          '#fb7185', // Rose-400
+          '#fbbf24', // Amber-400
+          '#a78bfa', // Violet-400
+          '#38bdf8', // Sky-400
+          '#f472b6', // Pink-400
+          '#2dd4bf', // Teal-400
+          '#f97316', // Orange-500
+          '#818cf8'  // Indigo-400
+        ];
+
+        chartInstance = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: labels,
+            datasets: [{
+              data: data,
+              backgroundColor: colorPalette.slice(0, data.length),
+              borderColor: '#0f172a', // Slate-900
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  color: '#cbd5e1', // Slate-300
+                  font: { family: 'Outfit', size: 11 }
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const value = context.raw;
+                    return ` ${context.label}: ${value.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}`;
+                  }
+                }
+              }
+            },
+            cutout: '75%'
+          }
+        });
+      }
+    }
+
+    // ================= ADMIN FUNCTIONS =================
+
+    // Load registered users in the admin table
+    async function loadAdminUsers() {
+      const tbody = document.getElementById('admin-users-table-body');
+      tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-slate-500">Cargando...</td></tr>';
+
+      try {
+        const response = await fetch(`/api/admin/usuarios?requester_id=${currentUser.id}`);
+        if (!response.ok) throw new Error();
+        const users = await response.json();
+
+        tbody.innerHTML = '';
+        users.forEach(u => {
+          const tr = document.createElement('tr');
+          tr.className = 'border-b border-slate-900 hover:bg-slate-900/30 transition-all';
+          
+          const isMe = u.id === currentUser.id;
+          const roleText = u.username === 'admin' ? 'Super Admin' : 'Usuario Estándar';
+          const roleClass = u.username === 'admin' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-slate-800 text-slate-400';
+          
+          tr.innerHTML = `
+            <td class="py-3 px-4 text-xs text-slate-500">#${u.id}</td>
+            <td class="py-3 px-4 font-semibold text-slate-200">${u.username} ${isMe ? '<span class="text-xs font-normal text-slate-500">(Tú)</span>' : ''}</td>
+            <td class="py-3 px-4">
+              <span class="text-xs px-2 py-0.5 rounded-full font-medium ${roleClass}">${roleText}</span>
+            </td>
+            <td class="py-3 px-4 text-center">
+              ${isMe 
+                ? '<span class="text-xs text-slate-600 font-medium">Bloqueado</span>' 
+                : `<button onclick="deleteUser(${u.id}, '${u.username}')" class="text-rose-500 hover:text-rose-400 transition-colors p-1" title="Eliminar usuario">
+                    <svg class="w-4 h-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                   </button>`
+              }
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-rose-400">Error al cargar la lista de usuarios.</td></tr>';
+      }
+    }
+
+    // Handles new user creation inside admin console
+    document.getElementById('admin-user-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const usernameInput = document.getElementById('admin-new-username');
+      const passwordInput = document.getElementById('admin-new-password');
+
+      const usernameVal = usernameInput.value.trim();
+      const passwordVal = passwordInput.value;
+
+      try {
+        const response = await fetch('/api/admin/usuarios', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            requester_id: currentUser.id,
+            username: usernameVal,
+            password: passwordVal
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showToast(data.error || 'No se pudo crear el usuario.', 'error');
+          return;
+        }
+
+        showToast(`Usuario '${data.username}' creado correctamente.`);
+        usernameInput.value = '';
+        passwordInput.value = '';
+        
+        loadAdminUsers();
+      } catch (err) {
+        showToast('Error de comunicación con el servidor.', 'error');
+      }
+    });
+
+    // Handles user deletion cascade
+    window.deleteUser = async function(userId, username) {
+      if (!confirm(`¿Estás seguro de eliminar permanentemente al usuario '${username}'? Se borrarán todos sus movimientos y saldos bancarios en cascada.`)) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/admin/usuarios/${userId}?requester_id=${currentUser.id}`, {
+          method: 'DELETE'
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showToast(data.error || 'Error al eliminar usuario.', 'error');
+          return;
+        }
+
+        showToast(`Usuario '${username}' eliminado.`);
+        loadAdminUsers();
+      } catch (err) {
+        showToast('Error de red al intentar eliminar el usuario.', 'error');
+      }
+    };
+  </script>
+</body>
+</html>
