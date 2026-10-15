@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#efede5">
+  <meta name="description" content="Cortes, color y actitud. Reserva tu cita en CRWN Barber Club.">
+  <title>CRWN — Barber Club</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="street.css">
+  <script src="street.js" defer></script>
+</head>
+<body>
+  <header class="topbar"><a class="wordmark" href="#top">CRWN<span>®</span></a><div class="barber-tag">BARBER CLUB <span>—</span> EST. YOUR BLOCK</div><button id="menu-toggle" class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">☰</button><nav class="nav"><a href="#cuts">SERVICIOS</a><a href="#work">EL TRABAJO</a><a href="#book">RESERVAR</a><a class="nav-book" href="#book">PILLAR HORA <span>↗</span></a></nav></header>
+  <main id="top">
+    <section class="hero"><div class="hero-gridlines" aria-hidden="true"></div><div class="hero-copy"><p class="kicker"><span class="live-dot"></span> CORTE FINO. CALLE REAL.</p><h1>BUEN<br>CORTE.<br><span>BUENA</span><br>ACTITUD<span class="period">.</span></h1><div class="hero-bottom"><p>Tu estilo. Tu barrio. Tu silla.<br>Entra como eres. Sal con flow.</p><a class="round-link" href="#book" aria-label="Reservar cita">↓</a></div></div><div class="hero-photo"><img src="../ar5tista3.jpeg" alt="Trabajo de color de CRWN Barber Club"><div class="photo-stamp">NO BAD<br>HAIR DAYS<span>✳</span></div><div class="photo-caption"><span>01 / COLOR CON CARÁCTER</span><span>NYC STATE OF MIND</span></div></div><span class="vertical-label">FRESH CUTS / GOOD PEOPLE / EVERY DAY</span><div class="hero-index">YOUR BLOCK<br>YOUR BARBER CLUB</div></section>
+
+    <div class="ticker" aria-label="Fresh cuts, good people"><div>FRESH CUTS <i>✳</i> GOOD PEOPLE <i>✳</i> NO SHORTCUTS <i>✳</i> FRESH CUTS <i>✳</i> GOOD PEOPLE <i>✳</i> NO SHORTCUTS <i>✳</i></div></div>
+
+    <section class="intro" id="cuts"><div class="section-id">01 — EL MENÚ</div><div class="intro-title"><h2>AL GRANO.<br><span>SIN DRAMA.</span></h2><p>Buen ojo, buena charla y un resultado que te queda bien también cuando sales por la puerta. Así de simple.</p></div><div class="service-list">
+      <article class="service"><span class="num">01</span><div class="service-name"><h3>COLOR</h3><p>Claritos o global · 150 min</p></div><span class="price">$50.000</span><a href="#book" class="arrow" aria-label="Reservar color">↗</a></article>
+      <article class="service"><span class="num">02</span><div class="service-name"><h3>CORTE</h3><p>30 min · limpio y a tu manera</p></div><span class="price">$15.000</span><a href="#book" class="arrow" aria-label="Reservar corte">↗</a></article>
+      <article class="service"><span class="num">03</span><div class="service-name"><h3>CORTE + BARBA</h3><p>45 min · el combo completo</p></div><span class="price">$20.000</span><a href="#book" class="arrow" aria-label="Reservar corte y barba">↗</a></article>
+      <article class="service"><span class="num">04</span><div class="service-name"><h3>PERMANENTE</h3><p>90 min · cambia la textura</p></div><span class="price">$50.000</span><a href="#book" class="arrow" aria-label="Reservar permanente">↗</a></article>
+    </div><p class="prices-foot">Precios y tiempos según la lista compartida. Confirma con el estudio la moneda y cualquier actualización.</p></section>
+
+    <section class="work" id="work"><div class="work-head"><div><div class="section-id">02 — EL TRABAJO</div><h2>HABLA EL<br><span>ESPEJO.</span></h2></div><p>Sin filtros. Sin poses.<br>Solo trabajo bien hecho.</p></div><div class="work-grid"><figure class="work-large"><img src="../mechas1.jpeg" alt="Mechas rubias con acabado natural"><figcaption><span>01</span> LIGHT WORK</figcaption></figure><figure><img src="../rizos.jpeg" alt="Rizos definidos"><figcaption><span>02</span> NATURAL TEXTURE</figcaption></figure><figure><img src="../platinado1.jpeg" alt="Cabello platinado"><figcaption><span>03</span> ICE COLD</figcaption></figure><figure><img src="../artista1.jpeg" alt="Color de cabello creativo"><figcaption><span>04</span> OWN YOUR LOOK</figcaption></figure></div><div class="work-note"><span class="acid-dot"></span> TODOS LOS CABELLOS. TODAS LAS VIBRAS.</div></section>
+
+    <section class="booking" id="book"><div class="book-copy"><div class="section-id">03 — TU TURNO</div><h2>LA SILLA<br><span>TE ESPERA.</span></h2><p>Elige tu servicio y el horario que te venga bien. Te contactaremos para confirmar la cita.</p><div class="walkin">✳ <span>RESERVA ONLINE<br><b>Y CAE CON CALMA.</b></span></div></div><form id="booking-form" class="book-form"><div class="form-title"><span>RESERVA / CRWN-01</span><span>LOS DATOS CON * SON OBLIGATORIOS</span></div><label>NOMBRE *<input name="name" required maxlength="90" placeholder="Tu nombre"></label><label>WHATSAPP / TELÉFONO *<input name="phone" type="tel" required maxlength="30" placeholder="Tu número"></label><label>SERVICIO *<select name="service" required><option value="">Elige tu corte</option><option>Color (claritos o global) — $50.000</option><option>Corte — $15.000</option><option>Corte y barba — $20.000</option><option>Permanentes — $50.000</option><option>Otro servicio — consultar</option></select></label><div class="form-pair"><label>DÍA *<input name="date" type="date" required></label><label>HORA *<select name="time" required><option value="">Primero elige día</option></select></label></div><label>NOTA / REFERENCIA<textarea name="note" rows="2" maxlength="400" placeholder="¿Algún detalle que quieras contar?"></textarea></label><button class="submit" type="submit">PEDIR MI CITA <span>↗</span></button><p id="form-feedback" class="feedback" role="status"></p><p class="form-disclaimer">La cita queda pendiente hasta que el estudio la confirme.</p></form></section>
+
+    <section class="agenda" id="agenda"><details><summary><span>ACCESO DEL EQUIPO</span><b>AGENDA DE CITAS&nbsp; +</b></summary><div class="agenda-inner"><form id="admin-login" class="admin-login"><label>CONTRASEÑA DE ADMINISTRACIÓN<input name="password" type="password" autocomplete="current-password" required placeholder="Contraseña"></label><button type="submit">ENTRAR ↗</button><p id="login-feedback" class="feedback" role="status"></p></form><div id="agenda-content" hidden><div class="agenda-heading"><h3>PRÓXIMAS CITAS</h3><div><input id="admin-date" type="date" aria-label="Filtrar agenda"><button id="admin-logout" type="button">CERRAR SESIÓN</button></div></div><div id="appointment-list" class="appointments"></div></div></div></details></section>
+  </main>
+  <footer class="footer"><a class="wordmark" href="#top">CRWN<span>®</span></a><p>BUEN CORTE. BUENA GENTE.</p><a href="#book">NOS VEMOS EN LA SILLA&nbsp; ↗</a><small>© 2026 CRWN BARBER CLUB · CON CITA PREVIA</small></footer>
+</body>
+</html>
